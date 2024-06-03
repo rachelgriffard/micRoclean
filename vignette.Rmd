@@ -1,0 +1,43 @@
+---
+title: "Decontamination Vignette"
+author: "Rachel Griffard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Load library
+
+```{r, message=FALSE, warning=FALSE}
+library(PACKAGE)
+```
+
+## Read in data and format
+
+Read in the sample 16S rRNA sequencing data
+
+<https://www.ebi.ac.uk/ena/browser/view/PRJEB37663>
+
+```{r}
+
+```
+
+Users can format the data in a *phyloseq* or *SummarizedExperiment* object for use within PACKAGE.
+
+## Decontamination
+
+Users input data into the single **decontaminate** function. The returned object will contain only those features that passed the deontamination pipeline.
+
+```{r}
+decontaminate(object, contaminant = 2, prevalence_threshold = 0.5, blocklist = blocklist, venn = FALSE, dashboard = FALSE)
+```
+
+Within this function, four separate methods to identify potential contaminants within the data:
+
+1.  Identify features with different abundances between batches
+
+2.  Identify features higher in negative control and lower in samples
+
+3.  Identify features with different abundance in different batches for technical replicates
+
+4.  Identify previously known contaminants\
+    Users can input a character list with known contaminants or use the automatic list included within PACKAGE.
