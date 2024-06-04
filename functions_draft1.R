@@ -255,27 +255,31 @@ step2 = function(counts, meta, threshold) {
 
 step3 = function(counts, meta, technical_replicates) {
   
-  # create phyloseq object
-  phyloseq =  wrap_phyloseq(counts, meta)
+  # wrap dataframe for technical replicates in each batch ordered by match (line ~336 original_pipeline2.R)
+  count_replicate = list()
+  PA_replicate = list()
   
-  # wrap dataframes for technical replicates
   for (i in 1:dplyr::n_distinct(meta$batch)) {
+    vals = technical_replicates[,i]
+    count_replicate[[i]] = data.frame(t(counts[vals,]))
     
+    # create presence absence matrices
+    k = count_replicate[[i]]
+    k = k %>%
+      mutate(ifelse(k>0, 1, 0))
+    PA_replicate[[i]] = k
   }
   
-  ################################## start at line 353 from original_pipeline2.R
-  # genus_new_sh = prune_samples(rs$Batch1, genus)
-  # genus_old_sh = prune_samples(rs$Batch2, genus)
-  # 
-  # genus_new.df = otu_table(genus_new_sh) # Extract OTU table from phyloseq object
-  # genus_new.df.PA = transform_sample_counts(genus_new.df, function(abund) 1*(abund>0)) # Set as present/absence
-  # 
-  # genus_old.df = otu_table(genus_old_sh) # Extract OTU table from phyloseq object
-  # genus_old.df.PA = transform_sample_counts(genus_old.df, function(abund) 1*(abund>0))
-  
-  # get kappa statistic for all technical replicates shared btwn extraction batches
+  # create dataframe to contain results from IRR kappa
   kappa_results = data.frame(value = numeric(), statistic = numeric(), p.value = numeric())
   
+  # get kappa values using for loop
+  for (i in nrow(batch_1)) {
+    k = kappa2(t(rbind(paste0('batch', i, sep = '')[i,], paste0('batch', i, '_sa', sep = '')[i,])), "unweighted")
+    kappa_results[i,"value"] = k$value
+    kappa_results[i,"statistic"] = k$statistic
+    kappa_results[i,"p.value"] = k$p.value
+  }
 }
 
 # Function 2D: Step 4 Pipeline 2
