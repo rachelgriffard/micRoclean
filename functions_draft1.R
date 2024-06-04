@@ -15,6 +15,7 @@ library(ANCOMBC) # pipeline 2
 library(ggVennDiagram) # function 3 - pipeline 2 - comparison across removed
 library(shiny) # function 3
 library(ANCOMBC) # pipeline 2 step1
+library(kappa) # pipeline 2 step3
 
 
 # Function 0: "Sort" function based on order names by strings
@@ -108,13 +109,15 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 #' @param meta dataframe with columns is_control, sample_type
 #' @param blocklist Vector of known previously identified contaminant features
 #' @param remove_if Threshold for number of steps feature must be identified as potential contaminant to be removed from final cleaned count matrix. Default set to 1.
-#' @param step2_threshold 
+#' @param step2_threshold Threshold value for prevalence method of decontam
+#' @param technical_replicates Vector identifying technical replicates across batches
 #' @param seed Random seed
 #' @return List object with original matrix, decontaminated matrix, and 
 #' filtering loss (FL)
 #' @exportClass list
 
-pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0.5, seed = 42) {
+pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0.5,
+                     technical_replicates, seed = 42) {
   
   set.seed(seed)
   
@@ -133,7 +136,7 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
   
   # Step 3: Remove if DA in diff batches for technical replicates
   
-  s3_res = step3(counts, meta)
+  s3_res = step3(counts, meta, technical_replicates)
   
   # Step 4: Remove known 'blocklist' of contaminants
   
@@ -216,10 +219,11 @@ step1 = function(counts, meta) {
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Matrix with columns is_control, sample_type, and batch
+#' @param threshold Threshold value for prevalence method of decontam
 #' @return Vector of features tagged as contaminants
 #' @exportClass vector
 
-step2 = function(counts, meta, threshold = 0.5) {
+step2 = function(counts, meta, threshold) {
 
   # subset to only batches that contain negative controls
   
@@ -245,10 +249,32 @@ step2 = function(counts, meta, threshold = 0.5) {
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Matrix with columns is_control, sample_type, and batch
+#' @param technical_replicates Matrix identifying technical replicates across batches with batch as column and rows matching replicates
 #' @return Vector of features tagged as contaminants
 #' @exportClass vector
 
-step3 = function(counts, meta) {
+step3 = function(counts, meta, technical_replicates) {
+  
+  # create phyloseq object
+  phyloseq =  wrap_phyloseq(counts, meta)
+  
+  # wrap dataframes for technical replicates
+  for (i in 1:dplyr::n_distinct(meta$batch)) {
+    
+  }
+  
+  ################################## start at line 353 from original_pipeline2.R
+  # genus_new_sh = prune_samples(rs$Batch1, genus)
+  # genus_old_sh = prune_samples(rs$Batch2, genus)
+  # 
+  # genus_new.df = otu_table(genus_new_sh) # Extract OTU table from phyloseq object
+  # genus_new.df.PA = transform_sample_counts(genus_new.df, function(abund) 1*(abund>0)) # Set as present/absence
+  # 
+  # genus_old.df = otu_table(genus_old_sh) # Extract OTU table from phyloseq object
+  # genus_old.df.PA = transform_sample_counts(genus_old.df, function(abund) 1*(abund>0))
+  
+  # get kappa statistic for all technical replicates shared btwn extraction batches
+  kappa_results = data.frame(value = numeric(), statistic = numeric(), p.value = numeric())
   
 }
 
@@ -265,7 +291,9 @@ step3 = function(counts, meta) {
 #' @exportClass vector
 
 step4 = function(counts, meta, blocklist) {
+  allTaxa = colnames(counts)
   
+  return(allTaxa[(allTaxa %in% blocklist)])
 }
 
 
