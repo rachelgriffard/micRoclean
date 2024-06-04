@@ -1,8 +1,8 @@
-# Function development for microbiome decontamination pipeline
+# Function development for microbiome decontamination pipeline (micRoclean)
 # 20240305
 # Rachel Griffard
 
-# Required libraries throughout package
+# Required libraries
 library(phyloseq) # object wrapper
 library(SummarizedExperiment) # object wrapper
 library(tidyverse)
@@ -372,13 +372,13 @@ wrap_phyloseq = function(counts, meta) {
 #' @name NP_Order
 #' @usage (adjusted from katiasmirn/PERfect/FiltLoss.R)
 #'
-#' @param Counts Count matrix with samples as rows and features as counts
+#' @param counts Count matrix with samples as rows and features as counts
 #' @return Data frame with features as row names and associated filtering loss value
 #' @exportClass data.frame
 
-NP_Order = function(Counts){
+NP_Order = function(counts){
   #arrange counts in order of increasing number of samples taxa are present in
-  NP = names(sort(apply(Counts, 2, Matrix::nnzero)))
+  NP = names(sort(apply(counts, 2, Matrix::nnzero)))
   return(NP)
 }
 
@@ -388,27 +388,27 @@ NP_Order = function(Counts){
 #' @usage Determine the filtering loss (FL) for count
 #' data based on removed features (adjusted from katiasmirn/PERfect/FiltLoss.R)
 #'
-#' @param X Count matrix with samples as rows and features as counts
+#' @param counts Count matrix with samples as rows and features as counts
 #' @param removed Vector of features to be removed as contaminants
 #' @return Data frame with features as row names and associated filtering loss value
 #' @exportClass data.frame
 
-FL = function(X, removed){
+FL = function(counts, removed){
   #X - data matrix
   #Ind - only jth taxon removed to calculate FL
-  p = dim(X)[2]#total #of taxa
+  p = dim(counts)[2]#total #of taxa
   Norm_Ratio = rep(1, p)
   
   # Check the format of X
-  if(!(class(X) %in% c("matrix"))){X = as.matrix(X)}
+  if(!(class(counts) %in% c("matrix"))){counts = as.matrix(counts)}
   
   #Order columns by importance
-  Order.vec = NP_Order(X)
+  Order.vec = NP_Order(counts)
 
-  X = X[,Order.vec] #properly order columns of X
+  counts = counts[,Order.vec] #properly order columns of X
   
   Order_Ind = seq_len(length(Order.vec))
-  Netw = t(X)%*%X
+  Netw = t(counts)%*%counts
   
   #Taxa at the top of the list have smallest number of connected nodes
   for (i in seq_len(p)){
@@ -422,9 +422,9 @@ FL = function(X, removed){
   
   FL = 1 - Norm_Ratio/sum(Netw*Netw)
   
-  names(FL) =  colnames(X)
+  names(FL) =  colnames(counts)
 
-  FL_value = sum(FL[rownames(FL) %in% removed,])
+  FL_value = sum(FL[names(FL) %in% removed])
 
   return(FL_value)
   
