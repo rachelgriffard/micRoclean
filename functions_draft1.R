@@ -65,16 +65,13 @@ well2well = function(counts, meta, seed = 42) {
 #' @param meta Data frame with columns is_control, sample_type, and (optional) sample_well
 #' @param control_order Vector ordering run of sample_type controls, default NA
 #' @param seed Random seed
-#' @return List object with original matrix, decontaminated matrix, and 
-#' difference in filtering loss (DFL) statistics for both
+#' @return List object with original matrix, decontaminated matrix, and corresponding
+#' filtering loss (FL) statistics
 #' @exportClass list
 
 pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   
   set.seed(seed)
-  
-  # PERfect implementation before SCRuBbing
-  pre_sim = PERFect_sim(X = counts)
   
   # SCRuB
   scr_out = SCRuB(counts, 
@@ -82,15 +79,14 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
                   control_order = control_order)
   sc_counts = data.frame(scr_out$decontaminated_samples)
   
-  # Extract DFL values ordered by contribution
-  pre_DFL = DFL(counts)
-  post_DFL = DFL(sc_counts) # post-scrub
+  sc_FL = FL()
+  
+  # extract FL values from SCRuB data
   
   
   # Create deliverable
   deliv = list(
-    preSCRuB_DFL = DFL,
-    postSCRuB_DFL = sc_DFL,
+    SCRuB_FL = sc_FL,
     SCRuB_res = scr_out
   )
   
@@ -208,6 +204,7 @@ step1 = function(counts, meta) {
   micro_s1_res[ncol(micro_s1_res)-2==TRUE,] # check this / add eval statement to determine if still true
   
   s1_rem = rownames(micro_s1_res[micro_s1_res$`diff_abn.batch2. New`==TRUE,])
+  # how do we make above naming convention true for all of the possible numbers of groups?
   
   index3 = grep(paste(s1_rem,collapse="$|"), colnames(counts))
   counts_s1 = counts[,-index3]
@@ -238,6 +235,18 @@ step2 = function(counts, meta, method, threshold = 0.5) {
   
   ## Option 2: microDecon
   if (step2 == 'microDecon') {
+    
+    # flip dataframe, move info to taxa, move OTU column to front
+    tdat = data.frame(t(dat))
+    tdat$OTU_ID = c(paste0('OTU', 1:nrow(tdat)))
+    tdat$taxa = rownames(tdat)
+    rownames(dat2) = NULL
+    tdat = dat2 %>%
+      relocate(OTU_ID)
+    
+    # identify blanks, move to front of dataframe after OTU_ID, identify number per groups
+    
+    decontaminated = decon(tdat, numb.blanks = , numb.ind = c(), taxa = T)
     
   }
   
@@ -315,12 +324,16 @@ visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
 #' @name unwrap_phyloseq
 #' @usage 
 #'
-#' @param phyloseq Phyloseq object to unwrap into required data frames for pipeline functions
+#' @param phyloseq Phyloseq object to unwrap into required count and meta matrices for pipeline functions
 #' @return List containing counts and metadata data frames for input into pipeline functions
 #' @exportClass list
 
 unwrap_phyloseq = function(phyloseq) {
+  counts = data.frame(t(phyloseq@otu_table)) # requires data frame first, will not coerce to matrix from phyloseq object
+  meta = data.frame(phyloseq@sam_data)
   
+  return(list(counts = as.matrix(counts), # adjust to matrix for returnable
+              meta = as.matrix(meta)))
 }
 
 # Function 5: "Wrap" phyloseq or SummarizedExperiment object
@@ -334,7 +347,8 @@ unwrap_phyloseq = function(phyloseq) {
 #' @exportClass phyloseq
 
 wrap_phyloseq = function(counts, meta) {
-  OTU = otu_table(as.matrix(counts), taxa_are_rows = TRUE)
+  counts = t(counts)
+  OTU = otu_table(counts, taxa_are_rows = TRUE)
   META = sample_data(meta)
   
   tax_mat = matrix(rownames(counts),nrow=nrow(counts),ncol=1)
