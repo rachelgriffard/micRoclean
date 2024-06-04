@@ -14,6 +14,7 @@ library(microDecon) # pipeline 2
 library(ANCOMBC) # pipeline 2
 library(ggVennDiagram) # function 3 - pipeline 2 - comparison across removed
 library(shiny) # function 3
+library(ANCOMBC) # pipeline 2 step1
 
 
 # Function 0: "Sort" function based on order names by strings
@@ -106,34 +107,29 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta dataframe with columns is_control, sample_type
 #' @param blocklist Vector of known contaminant features to remove
-#' @param remove_if 
-#' @param step2 Method for step 2 ('decontam' or 'microDecon')
+#' @param remove_if Threshold for number of steps feature must be identified as potential contaminant to be removed from final cleaned count matrix. Default set to 1.
 #' @param step2_threshold 
 #' @param seed Random seed
 #' @return List object with original matrix, decontaminated matrix, and 
-#' difference in filtering loss (DFL) statistics for both
+#' filtering loss (FL)
 #' @exportClass list
 
-pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2 = 'decontam', step2_threshold = 0.5, seed = 42) {
+pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0.5, seed = 42) {
   
   set.seed(seed)
   
   # Step 0: W2W check
-  ## vert and horiz output
   w2w = well2well(counts, meta, seed = seed)
-  
-  sim_0 = FL(counts)
-  
   
   # Step 1: Remove features that showed different abundance in different batches
   ## ancombc comparison across batches
   
   s1_res = step1(counts, meta)
   
-  # Step 2: Remove features that are differentially abund in negative controls
-  ## decontam OR microDecon
+  # Step 2: Remove features that are differentially abundant in negative controls
+  ## decontam
   
-  s2_res = step2(counts, meta, step2, step2_threshold)
+  s2_res = step2(counts, meta, step2_threshold)
   
   # Step 3: Remove if DA in diff batches for technical replicates
   
@@ -183,7 +179,7 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2 = 'decontam',
 #' @usage 
 #'
 #' @param counts Count matrix with samples as rows and features as counts
-#' @param meta dataframe with columns is_control, sample_type
+#' @param meta Matrix with columns is_control, sample_type, and batch
 #' @return List object with original matrix, decontaminated matrix, and 
 #' difference in filtering loss (DFL) statistics for both
 #' @exportClass data.frame
@@ -192,22 +188,30 @@ step1 = function(counts, meta) {
   
   micro = wrap_phyloseq(counts, meta)
   
+  # run differential analysis
   micro_s1 = ancombc(phyloseq = micro, assay_name = "counts", 
                      group = "batch", p_adj_method = "BH",  lib_cut = 0,
                      formula = "batch", 
                      struc_zero = TRUE, neg_lb = FALSE,
                      tol = 1e-5, max_iter = 100, conserve = FALSE,
                      alpha = 0.05, global = TRUE) 
-  
+  # create results matrix
   micro_s1_res = do.call(cbind, micro_s1$res)
   
-  micro_s1_res[ncol(micro_s1_res)-2==TRUE,] # check this / add eval statement to determine if still true
+  # identify column for diff results
+  col = ncol(micro_s1_res)
   
-  s1_rem = rownames(micro_s1_res[micro_s1_res$`diff_abn.batch2. New`==TRUE,])
-  # how do we make above naming convention true for all of the possible numbers of groups?
+  # return indices for which differentially abundant across batches
+  ind = which(micro_s1_res[,col]==TRUE)
   
+  # identify names of features tagged as contaminants
+  s1_rem = (micro_s1_res[ind,1])
+  
+  # create cleaned, returned count matrix
   index3 = grep(paste(s1_rem,collapse="$|"), colnames(counts))
-  counts_s1 = counts[,-index3]
+  
+  
+  # counts_s1 = counts[,-index3] # remove columns rather than rows
 }
 
 # Function 2B: Step 2 Pipeline 2
@@ -216,7 +220,7 @@ step1 = function(counts, meta) {
 #' @usage 
 #'
 #' @param counts Count matrix with samples as rows and features as counts
-#' @param meta dataframe with columns is_control, sample_type
+#' @param meta dataframe with columns is_control, sample_type, and batch (optional)
 #' @param method Method for step 2 ('decontam' or 'microDecon')
 #' @return List object with original matrix, decontaminated matrix, and 
 #' difference in filtering loss (DFL) statistics for both
@@ -284,23 +288,7 @@ step4 = function(counts, meta, blocklist) {
 visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
   
   if (pipeline1) {
-    DFL = rownames_to_column(DFL, "feature")
-    sc_DFL = rownames_to_column(sc_DFL, "feature")
-    
-    DFL_com = DFL %>%
-      left_join(sc_DFL, by = c('feature' = 'feature')) # join all DFL values into data.frame
-    
-    DFL_pl = DFL_com %>%
-      pivot_longer(!feature, names_to = 'Group', values_to = 'DFL') %>%
-      mutate(Group = ifelse(Group == 'DFL.x', 'Pre-SCRuB', 'Post-SCRuB')) %>%
-      mutate(DFL = ifelse(is.na(DFL)==TRUE, 0, DFL)) %>%
-      mutate(order(DFL)) %>%
-      ggplot(aes(fct_reorder(feature, DFL), DFL, fill = Group)) +
-      geom_bar(stat = 'identity', position = 'dodge2') +
-      xlab('Feature') + ggtitle('DFL Comparison Pre- and Post-SCRuB Method') +
-      coord_flip()
-    
-    ifelse(interactive == TRUE, ggplotly(DFL_pl), DFL_pl)
+
   }
   
   if (pipeline2) {
@@ -347,7 +335,7 @@ unwrap_phyloseq = function(phyloseq) {
 #' @exportClass phyloseq
 
 wrap_phyloseq = function(counts, meta) {
-  counts = t(counts)
+  counts = t(counts) # transpose to fit with expectation of phyloseq object
   OTU = otu_table(counts, taxa_are_rows = TRUE)
   META = sample_data(meta)
   
