@@ -9,7 +9,7 @@ library(tidyverse)
 library(plotly) # for interactive feature
 library(SCRuB) # pipeline 1
 library(PERfect) # DFL
-library(decontam) # pipeline 2
+library(decontam) # pipeline 2 step2
 library(microDecon) # pipeline 2
 library(ANCOMBC) # pipeline 2
 library(ggVennDiagram) # function 3 - pipeline 2 - comparison across removed
@@ -106,7 +106,7 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta dataframe with columns is_control, sample_type
-#' @param blocklist Vector of known contaminant features to remove
+#' @param blocklist Vector of known previously identified contaminant features
 #' @param remove_if Threshold for number of steps feature must be identified as potential contaminant to be removed from final cleaned count matrix. Default set to 1.
 #' @param step2_threshold 
 #' @param seed Random seed
@@ -176,94 +176,93 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
 # Function 2A: Step 1 Pipeline 2
 
 #' @name step1
-#' @usage 
+#' @usage Run step 1 of pipeline 2 to identify features that are differentially abundant
+#' between batches
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Matrix with columns is_control, sample_type, and batch
-#' @return List object with original matrix, decontaminated matrix, and 
-#' difference in filtering loss (DFL) statistics for both
-#' @exportClass data.frame
+#' @return  Vector of features tagged as contaminants
+#' @exportClass vector
 
 step1 = function(counts, meta) {
   
-  micro = wrap_phyloseq(counts, meta)
+  phyloseq = wrap_phyloseq(counts, meta)
   
   # run differential analysis
-  micro_s1 = ancombc(phyloseq = micro, assay_name = "counts", 
+  s1 = ancombc(phyloseq = phyloseq, assay_name = "counts", 
                      group = "batch", p_adj_method = "BH",  lib_cut = 0,
                      formula = "batch", 
                      struc_zero = TRUE, neg_lb = FALSE,
                      tol = 1e-5, max_iter = 100, conserve = FALSE,
                      alpha = 0.05, global = TRUE) 
   # create results matrix
-  micro_s1_res = do.call(cbind, micro_s1$res)
+  s1_res = do.call(cbind, s1$res)
   
   # identify column for diff results
-  col = ncol(micro_s1_res)
+  col = ncol(s1_res)
   
   # return indices for which differentially abundant across batches
-  ind = which(micro_s1_res[,col]==TRUE)
-  
-  # identify names of features tagged as contaminants
-  s1_res = (micro_s1_res[ind,1])
+  ind = which(s1_res[,col]==TRUE)
   
   # return list of tagged contaminant features
-  return(s1_res)
+  return(s1_res[ind,1])
 }
 
 # Function 2B: Step 2 Pipeline 2
 
 #' @name step2
-#' @usage 
+#' @usage Run step 2 of pipeline 2 to identify features that are expressed higher in negative
+#' controls and lower in samples
 #'
 #' @param counts Count matrix with samples as rows and features as counts
-#' @param meta dataframe with columns is_control, sample_type, and batch
-#' @return List object with original matrix, decontaminated matrix, and 
-#' difference in filtering loss (DFL) statistics for both
-#' @exportClass data.frame
+#' @param meta Matrix with columns is_control, sample_type, and batch
+#' @return Vector of features tagged as contaminants
+#' @exportClass vector
 
-step2 = function(counts, meta, method, threshold = 0.5) {
-  ## Option 1: decontam
-  if (step2 == 'decontam') {
-    # subset to only batches that contain negative controls
-    
-    decontam_output = isContaminant(phyloseq, method="prevalence", neg="is.neg", threshold=threshold)
-    index4 = which(decontam_output$contaminant)
-    
-    micro_s2 = rownames(decontam_output[decontam_output$contaminant==TRUE,])
-  }
+step2 = function(counts, meta, threshold = 0.5) {
+
+  # subset to only batches that contain negative controls
   
-  ## Option 2: microDecon
-  if (step2 == 'microDecon') {
-    
-    # flip dataframe, move info to taxa, move OTU column to front
-    tdat = data.frame(t(dat))
-    tdat$OTU_ID = c(paste0('OTU', 1:nrow(tdat)))
-    tdat$taxa = rownames(tdat)
-    rownames(dat2) = NULL
-    tdat = dat2 %>%
-      relocate(OTU_ID)
-    
-    # identify blanks, move to front of dataframe after OTU_ID, identify number per groups
-    
-    decontaminated = decon(tdat, numb.blanks = , numb.ind = c(), taxa = T)
-    
-  }
+  # create phyloseq object
+  phyloseq =  wrap_phyloseq(counts, meta)
   
-  ## Option 3: Invalid
-  else {
-    paste('Must select method for step two: microDecon OR decontam')
-    break
-  }
+  # run decontam prevalence method
+  s2_res = isContaminant(phyloseq, method="prevalence", neg="is_control", threshold=threshold)
+  
+  # return indices for which features identified as contaminant by decontam prevalence method
+  ind = which(s2_res$contaminant)
+  
+  # return list of tagged contaminant features  
+  return(rownames(s2_res[ind,]))
+
 }
 
 # Function 2C: Step 3 Pipeline 2
+
+#' @name step3
+#' @usage Run step 3 of pipeline 2 to identify features with different abundance in technical
+#' replicates across batches
+#'
+#' @param counts Count matrix with samples as rows and features as counts
+#' @param meta Matrix with columns is_control, sample_type, and batch
+#' @return Vector of features tagged as contaminants
+#' @exportClass vector
 
 step3 = function(counts, meta) {
   
 }
 
 # Function 2D: Step 4 Pipeline 2
+
+#' @name step4
+#' @usage Run step 4 of pipeline 2 to identify features previously identified as contaminants
+#' based on blocklist
+#' 
+#' @param blocklist Vector of known previously identified contaminant features
+#' @param counts Count matrix with samples as rows and features as counts
+#' @param meta Matrix with columns is_control, sample_type, and batch
+#' @return Vector of features tagged as contaminants
+#' @exportClass vector
 
 step4 = function(counts, meta, blocklist) {
   
