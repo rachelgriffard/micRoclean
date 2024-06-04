@@ -324,12 +324,16 @@ visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
 #' @name unwrap_phyloseq
 #' @usage 
 #'
-#' @param phyloseq Phyloseq object to unwrap into required data frames for pipeline functions
+#' @param phyloseq Phyloseq object to unwrap into required count and meta matrices for pipeline functions
 #' @return List containing counts and metadata data frames for input into pipeline functions
 #' @exportClass list
 
 unwrap_phyloseq = function(phyloseq) {
+  counts = data.frame(t(phyloseq@otu_table)) # requires data frame first, will not coerce to matrix from phyloseq object
+  meta = data.frame(phyloseq@sam_data)
   
+  return(list(counts = as.matrix(counts), # adjust to matrix for returnable
+              meta = as.matrix(meta)))
 }
 
 # Function 5: "Wrap" phyloseq or SummarizedExperiment object
@@ -343,7 +347,8 @@ unwrap_phyloseq = function(phyloseq) {
 #' @exportClass phyloseq
 
 wrap_phyloseq = function(counts, meta) {
-  OTU = otu_table(as.matrix(counts), taxa_are_rows = TRUE)
+  counts = t(counts)
+  OTU = otu_table(counts, taxa_are_rows = TRUE)
   META = sample_data(meta)
   
   tax_mat = matrix(rownames(counts),nrow=nrow(counts),ncol=1)
