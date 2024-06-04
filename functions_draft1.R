@@ -205,13 +205,10 @@ step1 = function(counts, meta) {
   ind = which(micro_s1_res[,col]==TRUE)
   
   # identify names of features tagged as contaminants
-  s1_rem = (micro_s1_res[ind,1])
+  s1_res = (micro_s1_res[ind,1])
   
-  # create cleaned, returned count matrix
-  index3 = grep(paste(s1_rem,collapse="$|"), colnames(counts))
-  
-  
-  # counts_s1 = counts[,-index3] # remove columns rather than rows
+  # return list of tagged contaminant features
+  return(s1_res)
 }
 
 # Function 2B: Step 2 Pipeline 2
@@ -220,8 +217,7 @@ step1 = function(counts, meta) {
 #' @usage 
 #'
 #' @param counts Count matrix with samples as rows and features as counts
-#' @param meta dataframe with columns is_control, sample_type, and batch (optional)
-#' @param method Method for step 2 ('decontam' or 'microDecon')
+#' @param meta dataframe with columns is_control, sample_type, and batch
 #' @return List object with original matrix, decontaminated matrix, and 
 #' difference in filtering loss (DFL) statistics for both
 #' @exportClass data.frame
