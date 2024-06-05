@@ -254,7 +254,7 @@ step2 = function(counts, meta, threshold) {
 #' @return Vector of features tagged as contaminants
 #' @exportClass vector
 
-step3 = function(counts, meta, technical_replicates) {
+step3 = function(counts, technical_replicates) {
   
   # wrap dataframe for technical replicates in each batch ordered by match (line ~336 original_pipeline2.R)
   count_replicate = list()
@@ -265,18 +265,19 @@ step3 = function(counts, meta, technical_replicates) {
     count_replicate[[i]] = data.frame(t(counts[vals,]))
     
     # create presence absence matrices
-    k = as.matrix(count_replicate[[i]])
-    k[k!=0] = 1
-    PA_replicate[[i]] = k
+    j = as.matrix(count_replicate[[i]])
+    j[j!=0] = 1
+    PA_replicate[[i]] = j
   }
   
   # create dataframe to contain results from IRR kappa
   kappa_results = data.frame(value = numeric(), statistic = numeric(), p.value = numeric())
   
   # get kappa values using for loop
+  batch1.df.PA = PA_replicate[[1]]
+  batch2.df.PA = PA_replicate[[2]]
+  
   for (i in nrow(PA_replicate[[1]])) {
-    batch1.df.PA = PA_replicate[[1]]
-    batch2.df.PA = PA_replicate[[2]]
     k = kappa2(t(rbind(batch1.df.PA[i,], batch2.df.PA[i,])), "unweighted")
     kappa_results[i,"value"] = k$value 
     kappa_results[i,"statistic"] = k$statistic
@@ -286,11 +287,9 @@ step3 = function(counts, meta, technical_replicates) {
   row.names(kappa_results) = colnames(counts)
   
   kappa_results.no_NA = subset(kappa_results, !is.na(value) & !is.na(p.value))
-  kappa_results_sig = subset(kappa_results.no_NA, p.value < 0.05)
-  kappa_res_keep = subset(kappa_results.no_NA, p.value < 0.05 & value > 0.4)
-  kappa_res_keep = cbind(tax_table(genus)[row.names(kappa_res_keep), "genus"], kappa_res_keep)
-  kappa_res_keep[order(kappa_res_keep$value, decreasing = TRUE),]
   kappa_res_remove = subset(kappa_results.no_NA, p.value >= 0.05 | value <= 0.4)
+  
+  return(rownames(kappa_res_remove))
 }
 
 # Function 2D: Step 4 Pipeline 2
