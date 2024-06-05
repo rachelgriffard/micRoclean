@@ -111,8 +111,8 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 #' @param step2_threshold Threshold value for prevalence method of decontam
 #' @param technical_replicates Vector identifying technical replicates across batches
 #' @param seed Random seed
-#' @return List object with original matrix, decontaminated matrix, and 
-#' filtering loss (FL)
+#' @return List object with contaminant matrix, decontaminated count matrix, and 
+#' filtering loss (FL) statistic
 #' @exportClass list
 
 pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0.5,
@@ -170,9 +170,9 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
   
   # Create deliverable
   
-  deliv = list('results' = res,
-               'new_counts' = final_counts,
-               'filtering loss' = FL)
+  deliv = list('contaminant_id' = res,
+               'decontaminated_count' = final_counts,
+               'filtering_loss' = FL)
   
   return(deliv)
 }
@@ -194,7 +194,7 @@ step1 = function(counts, meta) {
   
   # run differential analysis
   s1 = ancombc(phyloseq = phyloseq, assay_name = "counts", 
-                     group = "batch", p_adj_method = "BH",  lib_cut = 0,
+                     group = "batch", p_adj_method = "BH", lib_cut = 0,
                      formula = "batch", 
                      struc_zero = TRUE, neg_lb = FALSE,
                      tol = 1e-5, max_iter = 100, conserve = FALSE,
@@ -265,9 +265,8 @@ step3 = function(counts, meta, technical_replicates) {
     count_replicate[[i]] = data.frame(t(counts[vals,]))
     
     # create presence absence matrices
-    k = count_replicate[[i]]
-    k = k %>%
-      mutate(ifelse(k>0, 1, 0))
+    k = as.matrix(count_replicate[[i]])
+    k[k!=0] = 1
     PA_replicate[[i]] = k
   }
   
@@ -275,12 +274,23 @@ step3 = function(counts, meta, technical_replicates) {
   kappa_results = data.frame(value = numeric(), statistic = numeric(), p.value = numeric())
   
   # get kappa values using for loop
-  for (i in nrow(batch_1)) {
-    k = kappa2(t(rbind(paste0('batch', i, sep = '')[i,], paste0('batch', i, '_sa', sep = '')[i,])), "unweighted")
-    kappa_results[i,"value"] = k$value
+  for (i in nrow(PA_replicate[[1]])) {
+    batch1.df.PA = PA_replicate[[1]]
+    batch2.df.PA = PA_replicate[[2]]
+    k = kappa2(t(rbind(batch1.df.PA[i,], batch2.df.PA[i,])), "unweighted")
+    kappa_results[i,"value"] = k$value 
     kappa_results[i,"statistic"] = k$statistic
     kappa_results[i,"p.value"] = k$p.value
   }
+  
+  row.names(kappa_results) = colnames(counts)
+  
+  kappa_results.no_NA = subset(kappa_results, !is.na(value) & !is.na(p.value))
+  kappa_results_sig = subset(kappa_results.no_NA, p.value < 0.05)
+  kappa_res_keep = subset(kappa_results.no_NA, p.value < 0.05 & value > 0.4)
+  kappa_res_keep = cbind(tax_table(genus)[row.names(kappa_res_keep), "genus"], kappa_res_keep)
+  kappa_res_keep[order(kappa_res_keep$value, decreasing = TRUE),]
+  kappa_res_remove = subset(kappa_results.no_NA, p.value >= 0.05 | value <= 0.4)
 }
 
 # Function 2D: Step 4 Pipeline 2
