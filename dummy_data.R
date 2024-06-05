@@ -37,7 +37,7 @@ meta = data.frame("is_control" = control,
 rownames(meta) = rownames(dat)
 
 ### dummy technical replicates (p2s3)
-rs = data.frame("Batch1" = c("Old_trimmed_2", "Old_trimmed_86",
+technical_replicates = data.frame("Batch1" = c("Old_trimmed_2", "Old_trimmed_86",
                              "Old_trimmed_85", "Old_trimmed_49",
                              "Old_trimmed_38", "Old_trimmed_3",
                              "Old_trimmed_13", "Old_trimmed_26"),

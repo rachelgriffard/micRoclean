@@ -118,8 +118,8 @@ all(colnames(d.genus.ancomBC)==rownames(d.genus))
 otu_mat = d.genus.ancomBC
 meta = data.frame(group=d.genus$Groups,
                   batch=d.genus$Batch,
-                  age=d.genus$Age,
-                  race=d.genus$Race,
+                  # age=d.genus$Age,
+                  # race=d.genus$Race,
                   ex_groups=d.genus$Ex_Groups,
                   row.names=colnames(d.genus.ancomBC))
 tax_mat = matrix(rownames(otu_mat),nrow=nrow(otu_mat),ncol=1)
