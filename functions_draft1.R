@@ -8,14 +8,13 @@ library(SummarizedExperiment) # object wrapper
 library(tidyverse)
 library(plotly) # for interactive feature
 library(SCRuB) # pipeline 1
-library(PERfect) # DFL
 library(decontam) # pipeline 2 step2
 library(microDecon) # pipeline 2
 library(ANCOMBC) # pipeline 2
 library(ggVennDiagram) # function 3 - pipeline 2 - comparison across removed
 library(shiny) # function 3
 library(ANCOMBC) # pipeline 2 step1
-library(kappa) # pipeline 2 step3
+library(irr) # pipeline 2 step3
 
 
 # Function 0: "Sort" function based on order names by strings
@@ -142,22 +141,24 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
   
   s4_res = step4(counts, meta, blocklist)
   
-  # Prune failed taxa from final object
+  # Create dataframe indicating TRUE if contaminant and FALSE if not tagged
+  res = data.frame('feature' = colnames(counts))
   
-  res = data.frame('step1' = s1_res,
-                   'step2' = s2_res,
-                   'step3' = s3_res,
-                   'step4' = s4_res)
+  res = data.frame('step1' = ifelse(colnames(counts) %in% s1_res, TRUE, FALSE),
+                   'step2' = ifelse(colnames(counts) %in% s2_res, TRUE, FALSE),
+                   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
+                   'step4' = ifelse(colnames(counts) %in% s4_res, TRUE, FALSE))
   rownames(res) = colnames(counts)
   
   # return column with summed cases where feature was true
-  res$remove = rowSums(res)
   
   # transpose to same as counts matrix
-  res = t(res)
+  res2 = res
+  res2$remove = rowSums(res2)
+  res2 = t(res)
   
   # remove features above specified threshold from original counts frame
-  counts = rbind(counts, res['remove',])
+  counts = rbind(counts, res2['remove',])
   rownames(counts)[nrow(counts)] = 'remove'
   final_counts = counts[counts['remove'<remove_if,]==TRUE,]
   
@@ -169,7 +170,7 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
   
   # Create deliverable
   
-  deliv = list('results' = t(res),
+  deliv = list('results' = res,
                'new_counts' = final_counts,
                'filtering loss' = FL)
   
