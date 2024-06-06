@@ -159,8 +159,8 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   
   # remove features above specified threshold from original counts frame
   counts_rem = rbind(counts, res2['remove',])
-  rownames(counts)[nrow(counts)] = 'remove'
-  final_counts = counts[counts['remove'<remove_if,]==TRUE,]
+  rownames(counts_rem)[nrow(counts_rem)] = 'remove'
+  final_counts = counts[counts_rem['remove'<remove_if,],]
   
   removed = setdiff(colnames(final_counts), colnames(counts))
   
