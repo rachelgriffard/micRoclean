@@ -57,7 +57,7 @@ abund.range.filter = function(
 
 # Import blocklist (Eisenhofer et al., 2019) and genus data
 blocklist = read.csv("../Data/contaminant-blocklist.csv", header = F)
-gen = read.csv("../Data/Level6_Genus.csv", header=T,row.name=1)
+gen = read.csv("Level6_Genus.csv", header=T,row.name=1)
 
 # Extract meta data
 batch = gen$Batch

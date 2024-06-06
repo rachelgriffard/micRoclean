@@ -115,13 +115,13 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 #' filtering loss (FL) statistic
 #' @exportClass list
 
-pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0.5,
-                     technical_replicates, seed = 42) {
+pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 1,
+                     step2_threshold = 0.5, seed = 42) {
   
   set.seed(seed)
   
   # Step 0: W2W check
-  w2w = well2well(counts, meta, seed = seed)
+#  w2w = well2well(counts, meta, seed = seed)
   
   # Step 1: Remove features that showed different abundance in different batches
   ## ancombc comparison across batches
@@ -135,11 +135,11 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
   
   # Step 3: Remove if DA in diff batches for technical replicates
   
-  s3_res = step3(counts, meta, technical_replicates)
+  s3_res = step3(counts, technical_replicates)
   
   # Step 4: Remove known 'blocklist' of contaminants
   
-  s4_res = step4(counts, meta, blocklist)
+  s4_res = step4(counts, blocklist)
   
   # Create dataframe indicating TRUE if contaminant and FALSE if not tagged
   res = data.frame('feature' = colnames(counts))
@@ -155,14 +155,14 @@ pipeline2 = function(counts, meta, blocklist, remove_if = 1, step2_threshold = 0
   # transpose to same as counts matrix
   res2 = res
   res2$remove = rowSums(res2)
-  res2 = t(res)
+  res2 = t(res2)
   
   # remove features above specified threshold from original counts frame
-  counts = rbind(counts, res2['remove',])
+  counts_rem = rbind(counts, res2['remove',])
   rownames(counts)[nrow(counts)] = 'remove'
   final_counts = counts[counts['remove'<remove_if,]==TRUE,]
   
-  removed = counts[counts['remove'>remove_if,]==TRUE,]
+  removed = setdiff(colnames(final_counts), colnames(counts))
   
   # determine filtering loss value
   
@@ -298,14 +298,19 @@ step3 = function(counts, technical_replicates) {
 #' @usage Run step 4 of pipeline 2 to identify features previously identified as contaminants
 #' based on blocklist
 #' 
-#' @param blocklist Vector of known previously identified contaminant features
+#' @param blocklist List of known previously identified contaminant features
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Matrix with columns is_control, sample_type, and batch
 #' @return Vector of features tagged as contaminants
 #' @exportClass vector
 
-step4 = function(counts, meta, blocklist) {
+step4 = function(counts, blocklist) {
   allTaxa = colnames(counts)
+  
+  if (class(blocklist)!='character') {
+    print('The blocklist must be formatted as a character string!')
+    break
+  }
   
   return(allTaxa[(allTaxa %in% blocklist)])
 }
