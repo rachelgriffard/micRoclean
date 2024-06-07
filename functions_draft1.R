@@ -35,11 +35,25 @@ well2well = function(counts, meta, seed = 42) {
   # basic horiz/vert sort for now
   set.seed(seed)
   
+  # plate
+  well = data.frame()
+  
+  for (i in 1:7) { # rows
+    alpha = c('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
+    
+    for (j in 1:12) { # columns
+      well[i,j] = paste0(alpha[i], j, sep = '')
+    }
+  }
+  
+  # string for well assignments
+  vert = unname(unlist(well))
+  horiz = unname(unlist(data.frame(t(well))))
+  
   # append potential horizontal and vertical well orders together
-  vert = data.frame('sample_well' = )
+  # ensure switches again at new batch
   meta_vert = cbind(meta, vert)
   
-  horiz = data.frame('sample_well')
   meta_horiz = cbind(meta, horiz)
   
   # create SCRuB objects
@@ -150,14 +164,14 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   res = data.frame('feature' = colnames(counts),
                    'step1' = ifelse(colnames(counts) %in% s1_res, TRUE, FALSE),
                    'step2' = ifelse(colnames(counts) %in% s2_res, TRUE, FALSE),
-                   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
+                #   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
                    'step4' = ifelse(colnames(counts) %in% s4_res, TRUE, FALSE))
   
   # return column with summed cases where feature was true
   
   # transpose to same as counts matrix
   res2 = res
-  res2$remove = rowSums(res2[,2:5])
+  res2$remove = rowSums(res2[,-c(1)])
   res2 = t(res2)
   
   # remove features above specified threshold from original counts frame
@@ -315,7 +329,7 @@ step4 = function(counts, blocklist) {
   allTaxa = colnames(counts)
   
   if (class(blocklist)!='character') {
-    warning('The blocklist must be formatted as a character string!')
+    warning('blocklist parameter must be formatted as a character vector')
     break
   }
   
