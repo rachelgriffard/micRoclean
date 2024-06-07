@@ -35,14 +35,14 @@ well2well = function(counts, meta, seed = 42) {
   # basic horiz/vert sort for now
   set.seed(seed)
   
-  # plate
+  # plate wells
   well = data.frame()
   
   for (i in 1:7) { # rows
-    alpha = c('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
+    row = c('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
     
     for (j in 1:12) { # columns
-      well[i,j] = paste0(alpha[i], j, sep = '')
+      well[i,j] = paste0(row[i], j, sep = '')
     }
   }
   
@@ -51,10 +51,15 @@ well2well = function(counts, meta, seed = 42) {
   horiz = unname(unlist(data.frame(t(well))))
   
   # append potential horizontal and vertical well orders together
-  # ensure switches again at new batch
-  meta_vert = cbind(meta, vert)
+    # order batches based on naming convention
   
-  meta_horiz = cbind(meta, horiz)
+  
+    # restart at each batch (different plates)
+  vert_b = 
+  meta_vert = cbind(meta, vert_b)
+  
+  horiz_b = 
+  meta_horiz = cbind(meta, horiz_b)
   
   # create SCRuB objects
   SCRuB_vert = SCRuB(data = counts,
