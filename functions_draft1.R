@@ -51,8 +51,8 @@ well2well = function(counts, meta, seed = 42) {
   horiz = unname(unlist(data.frame(t(well))))
   
   # append potential horizontal and vertical well orders together
-    # order batches based on naming convention
-  
+    # order batches based on naming convention (number in the end of the string)
+  meta[order(as.numeric(sub(".*[^0-9](\\d+)$", "\\1", rownames(meta)))),]
   
     # restart at each batch (different plates)
   vert_b = 
