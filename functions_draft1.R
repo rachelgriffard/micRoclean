@@ -315,7 +315,7 @@ step4 = function(counts, blocklist) {
   allTaxa = colnames(counts)
   
   if (class(blocklist)!='character') {
-    print('The blocklist must be formatted as a character string!')
+    warning('The blocklist must be formatted as a character string!')
     break
   }
   
@@ -433,7 +433,7 @@ NP_Order = function(counts){
 
 #' @name FL
 #' @usage Determine the filtering loss (FL) for count
-#' data based on removed features (adjusted from katiasmirn/PERfect/FiltLoss.R)
+#' data based on removed features (adjusted from katiasmirn/PERfect/FL_J.R)
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param removed Vector of features to be removed as contaminants
@@ -441,40 +441,19 @@ NP_Order = function(counts){
 #' @exportClass data.frame
 
 FL = function(counts, removed){
-  #X - data matrix
-  #Ind - only jth taxon removed to calculate FL
-  p = dim(counts)[2]#total #of taxa
-  Norm_Ratio = rep(1, p)
   
-  # Check the format of X
- # if(!(class(counts) %in% c("matrix"))){counts = as.matrix(counts)}
+  # Check the format of J
+  if(class(removed) != "character")
+    stop('removed argument must be a character vector containing names of taxa to be removed')
   
-  #Order columns by importance
-  Order.vec = NP_Order(counts)
-
-  counts = counts[,Order.vec] #properly order columns of X
-  
-  Order_Ind = seq_len(length(Order.vec))
-  Netw = t(counts)%*%counts
-  
-  #Taxa at the top of the list have smallest number of connected nodes
-  for (i in seq_len(p)){
-    Ind = Order_Ind[-i]
-    
-    #define matrix X_{-J}'X_{-J} for individual filtering loss
-    Netw_R = Netw[Ind, Ind]
-    
-    Norm_Ratio[i] =  sum(Netw_R*Netw_R)
-  }
-  
-  FL = 1 - Norm_Ratio/sum(Netw*Netw)
-  
-  names(FL) =  colnames(counts)
-
-  FL_value = sum(FL[names(FL) %in% removed])
-
-  return(FL_value)
-  
+  Ind <- which(colnames(counts) %in%  removed)
+  X_R <- counts[,-Ind]
+  #calculate corresponding norm
+  Netw <- t(as.matrix(counts))%*%as.matrix(counts)
+  Netw_R <- t(as.matrix(X_R))%*%as.matrix(X_R)
+  #FL <-  1 - (psych::tr(t(Netw_R)%*%Netw_R)/psych::tr(t(Netw)%*%Netw))
+  FL <-  1 - (sum(Netw_R*Netw_R)/sum(Netw*Netw))
+  return(FL)
 }
 
 # ? Function ?: Shiny visualization for output
