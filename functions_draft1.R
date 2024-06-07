@@ -87,8 +87,11 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   
   # Create deliverable
   deliv = list(
-    SCRuB_FL = sc_FL,
-    SCRuB_res = scr_out
+    deliv = list('contaminant_id' = res,
+                 'decontaminated_count' = final_counts,
+                 'removed' = removed,
+                 'filtering_loss' = FL,
+                 'pipeline' = 'pipeline1')
   )
   
   return(deliv)
@@ -111,8 +114,8 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 #' @param step2_threshold Threshold value for prevalence method of decontam
 #' @param technical_replicates Vector identifying technical replicates across batches
 #' @param seed Random seed
-#' @return List object with contaminant matrix, decontaminated count matrix, and 
-#' filtering loss (FL) statistic
+#' @return List object with contaminant matrix, decontaminated count matrix, character string of all removed contaminants,
+#' and filtering loss (FL) statistic
 #' @exportClass list
 
 pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 1,
@@ -144,25 +147,25 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   # Create dataframe indicating TRUE if contaminant and FALSE if not tagged
   res = data.frame('feature' = colnames(counts))
   
-  res = data.frame('step1' = ifelse(colnames(counts) %in% s1_res, TRUE, FALSE),
+  res = data.frame('feature' = colnames(counts),
+                   'step1' = ifelse(colnames(counts) %in% s1_res, TRUE, FALSE),
                    'step2' = ifelse(colnames(counts) %in% s2_res, TRUE, FALSE),
                    'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
                    'step4' = ifelse(colnames(counts) %in% s4_res, TRUE, FALSE))
-  rownames(res) = colnames(counts)
   
   # return column with summed cases where feature was true
   
   # transpose to same as counts matrix
   res2 = res
-  res2$remove = rowSums(res2)
+  res2$remove = rowSums(res2[,2:5])
   res2 = t(res2)
   
   # remove features above specified threshold from original counts frame
   counts_rem = rbind(counts, res2['remove',])
   rownames(counts_rem)[nrow(counts_rem)] = 'remove'
-  final_counts = counts[counts_rem['remove'<remove_if,],]
+  final_counts = counts[,counts_rem['remove',]<remove_if]
   
-  removed = setdiff(colnames(final_counts), colnames(counts))
+  removed = setdiff(colnames(counts), colnames(final_counts))
   
   # determine filtering loss value
   
@@ -172,7 +175,9 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   
   deliv = list('contaminant_id' = res,
                'decontaminated_count' = final_counts,
-               'filtering_loss' = FL)
+               'removed' = removed,
+               'filtering_loss' = FL,
+               'pipeline' = 'pipeline2')
   
   return(deliv)
 }
@@ -193,12 +198,14 @@ step1 = function(counts, meta) {
   phyloseq = wrap_phyloseq(counts, meta)
   
   # run differential analysis
+  suppressWarnings({
   s1 = ancombc(phyloseq = phyloseq, assay_name = "counts", 
                      group = "batch", p_adj_method = "BH", lib_cut = 0,
                      formula = "batch", 
                      struc_zero = TRUE, neg_lb = FALSE,
                      tol = 1e-5, max_iter = 100, conserve = FALSE,
                      alpha = 0.05, global = TRUE) 
+  })
   # create results matrix
   s1_res = do.call(cbind, s1$res)
   
@@ -329,14 +336,19 @@ step4 = function(counts, blocklist) {
 
 visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
   
-  if (pipeline1) {
+  if (pipeline_output$pipeline == 'pipeline1') {
 
   }
   
-  if (pipeline2) {
+  if (pipeline_output$pipeline == 'pipeline2') {
+    # import data
+    s1_rem = pipeline_output$contaminant_id$feature[pipeline_output$contaminant_id$step1==TRUE]
+    s2_rem = pipeline_output$contaminant_id$feature[pipeline_output$contaminant_id$step2==TRUE]
+    s3_rem = pipeline_output$contaminant_id$feature[pipeline_output$contaminant_id$step3==TRUE]
+    s4_rem = pipeline_output$contaminant_id$feature[pipeline_output$contaminant_id$step4==TRUE]
     # Venn comparison of contaminant taxa removed across steps
     x = list(s1_rem, s2_rem, s3_rem, s4_rem)
-    ggVennDiagram(x, stroke.size =1,
+    p = ggVennDiagram(x, stroke.size =1,
                   category.names = c("Step 1", "Step 2", "Step 3", "Step 4"),
                   edge_lty = "solid", set_size = 6,
                   label_alpha = 0.5, label_percent_digit = 1) +
@@ -346,6 +358,22 @@ visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
       labs(title="Taxa Removal by Step") +
       theme(legend.position="none", plot.title=element_text(size=25, hjust = 0.5)) +
       scale_fill_distiller(palette = "Spectral")
+    
+    if (interactive == FALSE) {
+      return(p)
+    }
+    
+    if (interactive == TRUE) {
+      return(plotly::ggplotly(p))
+    }
+    
+    else {
+      warning('interactive must be set to TRUE or FALSE.')
+    }
+  }
+  
+  else {
+    warning('Rerun data through pipeline and ensure object in visualize_pipeline is output from pipeline1 or pipeline2.')
   }
 }
 
@@ -419,7 +447,7 @@ FL = function(counts, removed){
   Norm_Ratio = rep(1, p)
   
   # Check the format of X
-  if(!(class(counts) %in% c("matrix"))){counts = as.matrix(counts)}
+ # if(!(class(counts) %in% c("matrix"))){counts = as.matrix(counts)}
   
   #Order columns by importance
   Order.vec = NP_Order(counts)
@@ -447,7 +475,6 @@ FL = function(counts, removed){
 
   return(FL_value)
   
-  # return(FL = data.frame(FL))
 }
 
 # ? Function ?: Shiny visualization for output
