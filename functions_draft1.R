@@ -50,6 +50,10 @@ well2well = function(counts, meta, seed = 42) {
   vert = unname(unlist(well))
   horiz = unname(unlist(data.frame(t(well))))
   
+  # order samples by name convention
+  meta = meta %>%
+    arrange(batch ,as.numeric(str_extract(rownames(meta), "\\d+$")))
+  
   # append potential horizontal and vertical well orders together
     # restart at each batch (different plates)
   num_b = table(meta$batch)
@@ -61,6 +65,12 @@ well2well = function(counts, meta, seed = 42) {
   sample_well = c(horiz[1:num_b[1]], horiz[1:num_b[2]])
   meta_horiz = cbind(meta, sample_well)
   meta_horiz = subset(meta_horiz, select = c(is_control, sample_type, sample_well))
+  
+  # order counts by name convention for SCRuB function
+  counts = as.data.frame(counts) %>%
+    add_column(meta$batch) %>%
+    arrange(`meta$batch`, as.numeric(str_extract(rownames(counts), "\\d+$"))) %>%
+    mutate(`meta$batch` = NULL)
   
   # create SCRuB objects
   SCRuB_vert = SCRuB(counts,
