@@ -36,6 +36,15 @@ res = read.csv('res_toydata.csv')
 ### dummy data for FL function
 removed = sample(rownames(FL), 100)
 
+sample = group
+sample[!sample == "Control"] = "Plasma"
+
+dat = as.matrix(dat)
+
+meta = data.frame("is_control" = control,
+                  "sample_type" = sample,
+                  "batch" = batch)
+rownames(meta) = rownames(dat)
 
 
 ### dummy technical replicates (p2s3)

@@ -7,7 +7,7 @@ library(phyloseq) # object wrapper
 library(SummarizedExperiment) # object wrapper
 library(tidyverse)
 library(plotly) # for interactive feature
-library(SCRuB) # pipeline 1
+library(SCRuB) # well2well, pipeline 1
 library(decontam) # pipeline 2 step2
 library(microDecon) # pipeline 2
 library(ANCOMBC) # pipeline 2
@@ -38,7 +38,7 @@ well2well = function(counts, meta, seed = 42) {
   # plate wells
   well = data.frame()
   
-  for (i in 1:7) { # rows
+  for (i in 1:8) { # rows
     row = c('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
     
     for (j in 1:12) { # columns
@@ -51,22 +51,27 @@ well2well = function(counts, meta, seed = 42) {
   horiz = unname(unlist(data.frame(t(well))))
   
   # append potential horizontal and vertical well orders together
+
     # order batches based on naming convention (number in the end of the string)
   meta[order(as.numeric(sub(".*[^0-9](\\d+)$", "\\1", rownames(meta)))),]
-  
+
     # restart at each batch (different plates)
-  vert_b = 
-  meta_vert = cbind(meta, vert_b)
+  num_b = table(meta$batch)
   
-  horiz_b = 
-  meta_horiz = cbind(meta, horiz_b)
+  sample_well = c(vert[1:num_b[1]], vert[1:num_b[2]])
+  meta_vert = cbind(meta, sample_well)
+  meta_vert = subset(meta_vert, select = c(is_control, sample_type, sample_well))
+  
+  sample_well = c(horiz[1:num_b[1]], horiz[1:num_b[2]])
+  meta_horiz = cbind(meta, sample_well)
+  meta_horiz = subset(meta_horiz, select = c(is_control, sample_type, sample_well))
   
   # create SCRuB objects
-  SCRuB_vert = SCRuB(data = counts,
-                     metadata = meta_vert)
+  SCRuB_vert = SCRuB(counts,
+                     meta_vert)
     
-  SCRuB_horiz = SCRuB(data = counts,
-                      metadata = meta_vert)
+  SCRuB_horiz = SCRuB(counts,
+                      meta_horiz)
   
   # output
   return(list('Vertical' = data.frame(SCRuB_vert$decontaminated_samples),
