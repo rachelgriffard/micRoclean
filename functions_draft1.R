@@ -118,7 +118,7 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 }
 
 
-# Function 2: Pipeline 2 - Mahoney
+# Function 2: Pipeline 2
 ## Useful if data does not contain well information, incomplete negative controls,
 ## multiple batches
 ## Filters entire features, not partial
@@ -170,7 +170,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   res = data.frame('feature' = colnames(counts),
                    'step1' = ifelse(colnames(counts) %in% s1_res, TRUE, FALSE),
                    'step2' = ifelse(colnames(counts) %in% s2_res, TRUE, FALSE),
-                #   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
+                   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
                    'step4' = ifelse(colnames(counts) %in% s4_res, TRUE, FALSE))
   
   # return column with summed cases where feature was true
