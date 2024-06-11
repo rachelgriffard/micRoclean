@@ -32,7 +32,7 @@ sample[!sample == "Control"] = "Plasma"
 dat = as.matrix(dat)
 
 meta = data.frame("is_control" = control,
-                  "sample" = sample,
+                  "sample_type" = sample,
                   "batch" = batch)
 rownames(meta) = rownames(dat)
 
