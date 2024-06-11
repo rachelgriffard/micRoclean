@@ -50,6 +50,10 @@ well2well = function(counts, meta, seed = 42) {
   vert = unname(unlist(well))
   horiz = unname(unlist(data.frame(t(well))))
   
+  # order samples by name convention
+  meta = meta %>%
+    arrange(batch ,as.numeric(str_extract(rownames(meta), "\\d+$")))
+  
   # append potential horizontal and vertical well orders together
 
     # order batches based on naming convention (number in the end of the string)
@@ -65,6 +69,12 @@ well2well = function(counts, meta, seed = 42) {
   sample_well = c(horiz[1:num_b[1]], horiz[1:num_b[2]])
   meta_horiz = cbind(meta, sample_well)
   meta_horiz = subset(meta_horiz, select = c(is_control, sample_type, sample_well))
+  
+  # order counts by name convention for SCRuB function
+  counts = as.data.frame(counts) %>%
+    add_column(meta$batch) %>%
+    arrange(`meta$batch`, as.numeric(str_extract(rownames(counts), "\\d+$"))) %>%
+    mutate(`meta$batch` = NULL)
   
   # create SCRuB objects
   SCRuB_vert = SCRuB(counts,
@@ -122,7 +132,7 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 }
 
 
-# Function 2: Pipeline 2 - Mahoney
+# Function 2: Pipeline 2
 ## Useful if data does not contain well information, incomplete negative controls,
 ## multiple batches
 ## Filters entire features, not partial
@@ -174,7 +184,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   res = data.frame('feature' = colnames(counts),
                    'step1' = ifelse(colnames(counts) %in% s1_res, TRUE, FALSE),
                    'step2' = ifelse(colnames(counts) %in% s2_res, TRUE, FALSE),
-                #   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
+                   'step3' = ifelse(colnames(counts) %in% s3_res, TRUE, FALSE),
                    'step4' = ifelse(colnames(counts) %in% s4_res, TRUE, FALSE))
   
   # return column with summed cases where feature was true
