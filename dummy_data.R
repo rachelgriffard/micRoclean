@@ -20,7 +20,7 @@ dat = dat[,-index2] # remove if no value
 res = read.csv('res_toydata.csv')
 
 ### dummy data for FL function
-removed = sample(rownames(FL), 100)
+removed = sample(colnames(dat), 100)
 
 ### dummy meta data
 control = group
