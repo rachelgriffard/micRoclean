@@ -84,10 +84,15 @@ well2well = function(counts, meta, seed = 42) {
     
   SCRuB_horiz = SCRuB::SCRuB(counts,
                       meta_horiz)
+  SCRuB = SCRUB::SCRuB(counts,
+                             meta %>% select(tidyselect::any_of(c('is_control', 'sample_type', 'sample_well'))))
+  
+  # determine if vert/horiz significantly different from without spatial
+  vegan::mantel(vegan::vegdist(SCRuB), vegan::vegdist(SCRuB_vert)) # maybe, but will have to match columns/zero out if missing
   
   # output
-  return(list('Vertical' = data.frame(SCRuB_vert$decontaminated_samples),
-              'Horizontal' = data.frame(SCRuB_horiz$decontaminated_samples)))
+  return(# some statistic here
+    )
 }
 
 # Function 1: Pipeline 1 - SCRuB + PERfect
