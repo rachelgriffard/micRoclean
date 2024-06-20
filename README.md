@@ -1,3 +1,6 @@
+
+![micRoclean](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/06b08c6f-8f01-473d-b669-f9b4f9f579c8)
+
 Example data frames for README.md file micRoclean
 
 Samples should be named with numbers at the end of the string and restart from one batch to the next.
