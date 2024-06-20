@@ -25,6 +25,8 @@ library(irr) # pipeline 2 step3
 #' @name well2well
 #' @usage Determine the potential impact of spatial well to well relationships
 #'
+#' @import dplyr
+#'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name
 #' @param seed Random seed
@@ -46,11 +48,11 @@ well2well = function(counts, meta, seed = 42) {
     }
   }
   
-  # string for well assignments
-  vert = unname(unlist(well))
-  horiz = unname(unlist(data.frame(t(well))))
+    # string for well assignments
+  vert = unname(unlist(well)) # vertical alignment
+  horiz = unname(unlist(data.frame(t(well)))) # horizontal alignment
   
-  # order samples by name convention
+    # order samples by name convention
   meta = meta %>%
     arrange(batch, as.numeric(str_extract(rownames(meta), "\\d+$")))
   
@@ -77,10 +79,10 @@ well2well = function(counts, meta, seed = 42) {
     mutate(`meta$batch` = NULL)
   
   # create SCRuB objects
-  SCRuB_vert = SCRuB(counts,
+  SCRuB_vert = SCRuB::SCRuB(counts,
                      meta_vert)
     
-  SCRuB_horiz = SCRuB(counts,
+  SCRuB_horiz = SCRuB::SCRuB(counts,
                       meta_horiz)
   
   # output
