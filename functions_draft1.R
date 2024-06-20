@@ -111,26 +111,21 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   set.seed(seed)
   
   # SCRuB
-  scr_out = SCRuB(counts, 
-                  metadata = meta,
+  scr_out = SCRuB::SCRuB(counts, 
+                  metadata = meta[,-3],
                   control_order = control_order)
   sc_counts = data.frame(scr_out$decontaminated_samples)
   
-  sc_FL = FL()
+  sc_FL = FL(counts, new_counts = sc_counts)
   
   # extract FL values from SCRuB data
   
   
   # Create deliverable
-  deliv = list(
-    deliv = list('contaminant_id' = res,
-                 'decontaminated_count' = final_counts,
-                 'removed' = removed,
-                 'filtering_loss' = FL,
+  return(list('decontaminated_count' = sc_counts,
+                 #'filtering_loss' = FL,
                  'pipeline' = 'pipeline1')
   )
-  
-  return(deliv)
 }
 
 
@@ -205,7 +200,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   
   # determine filtering loss value
   
-  FL = FL(counts, removed)
+  FL = FL(counts, removed = removed)
   
   # Create deliverable
   
@@ -459,24 +454,38 @@ wrap_phyloseq = function(counts, meta) {
 #' data based on removed features (adjusted from katiasmirn/PERfect/FL_J.R)
 #'
 #' @param counts Count matrix with samples as rows and features as counts
+#' @param new_counts Count matrix with samples as rows and features as counts after being partially filtered by SCRuB method
 #' @param removed Vector of features to be removed as contaminants
 #' @return Data frame with features as row names and associated filtering loss value
 #' @exportClass data.frame
 
-FL = function(counts, removed){
+FL = function(counts, new_counts = NULL, removed = NULL){
   
-  # Check the format of J
-  if(class(removed) != "character")
-    stop('removed argument must be a character vector containing names of taxa to be removed')
+  # for pipeline 1
+  if (is.null(new_counts) == FALSE) { #pipeline 1
+    X_R = new_counts
+  }
   
-  Ind <- which(colnames(counts) %in%  removed)
-  X_R <- counts[,-Ind]
+  # for pipeline 2
+  if (is.null(removed) == FALSE) {
+    
+    # Check the format of removed vector
+    if(class(removed) != "character")
+      stop('removed argument must be a character vector containing names of taxa to be removed')
+    
+    Ind = which(colnames(counts) %in%  removed)
+    X_R = counts[,-Ind] 
+  }
+  
+  else {
+    warning('Ensure the correct new_counts or removed values are input for this method')
+  }
   
   #calculate corresponding norm
-  Netw <- t(as.matrix(counts))%*%as.matrix(counts)
-  Netw_R <- t(as.matrix(X_R))%*%as.matrix(X_R)
+  Netw = t(as.matrix(counts))%*%as.matrix(counts)
+  Netw_R = t(as.matrix(X_R))%*%as.matrix(X_R)
 
-  FL <-  1 - (sum(Netw_R*Netw_R)/sum(Netw*Netw))
+  FL =  1 - (sum(Netw_R*Netw_R)/sum(Netw*Netw))
   return(FL)
 }
 
