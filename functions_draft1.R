@@ -123,7 +123,7 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   
   # Create deliverable
   return(list('decontaminated_count' = sc_counts,
-                 #'filtering_loss' = FL,
+                 'filtering_loss' = sc_FL,
                  'pipeline' = 'pipeline1')
   )
 }
@@ -368,7 +368,7 @@ step4 = function(counts, blocklist) {
 visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
   
   if (pipeline_output$pipeline == 'pipeline1') {
-
+    warning('micRoclean does not currently have functionality to visualize SCRuB decontamination')
   }
   
   if (pipeline_output$pipeline == 'pipeline2') {
@@ -475,10 +475,6 @@ FL = function(counts, new_counts = NULL, removed = NULL){
     
     Ind = which(colnames(counts) %in%  removed)
     X_R = counts[,-Ind] 
-  }
-  
-  else {
-    warning('Ensure the correct new_counts or removed values are input for this method')
   }
   
   #calculate corresponding norm
