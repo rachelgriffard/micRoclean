@@ -1,11 +1,11 @@
 
 ![micRoclean](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/06b08c6f-8f01-473d-b669-f9b4f9f579c8)
 
+![Alt Flow (1)](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/d6ee9002-6f81-4719-8554-26b50aa50080)
+
 Example data frames for README.md file micRoclean
 
 Samples should be named with numbers at the end of the string and restart from one batch to the next.
-
-![Alt Flow](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/94a5d930-2cc6-4657-ad35-930af69df53b)
 
 ### modified from SCRuB README
 
