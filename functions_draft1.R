@@ -452,19 +452,6 @@ wrap_phyloseq = function(counts, meta) {
   return(phyloseq(OTU, META, TAX))
 }
 
-#' @name NP_Order
-#' @usage (adjusted from katiasmirn/PERfect/FiltLoss.R)
-#'
-#' @param counts Count matrix with samples as rows and features as counts
-#' @return Data frame with features as row names and associated filtering loss value
-#' @exportClass data.frame
-
-NP_Order = function(counts){
-  #arrange counts in order of increasing number of samples taxa are present in
-  NP = names(sort(apply(counts, 2, Matrix::nnzero)))
-  return(NP)
-}
-
 # Function 6: Filtering loss statistic 
 
 #' @name FL
@@ -484,10 +471,11 @@ FL = function(counts, removed){
   
   Ind <- which(colnames(counts) %in%  removed)
   X_R <- counts[,-Ind]
+  
   #calculate corresponding norm
   Netw <- t(as.matrix(counts))%*%as.matrix(counts)
   Netw_R <- t(as.matrix(X_R))%*%as.matrix(X_R)
-  #FL <-  1 - (psych::tr(t(Netw_R)%*%Netw_R)/psych::tr(t(Netw)%*%Netw))
+
   FL <-  1 - (sum(Netw_R*Netw_R)/sum(Netw*Netw))
   return(FL)
 }

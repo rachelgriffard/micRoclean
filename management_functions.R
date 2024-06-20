@@ -40,20 +40,6 @@ wrap_phyloseq = function(counts, meta) {
   return(phyloseq(OTU, META, TAX))
 }
 
-#' @name NP_Order
-#' @usage Order taxa by counts, required inside FL function (adjusted from katiasmirn/PERfect/FiltLoss.R)
-#' 
-#' @family management
-#'
-#' @param counts Count matrix with samples as rows and features as counts
-#' @return Data frame with features as row names and associated filtering loss value
-#' @exportClass data.frame
-
-NP_Order = function(counts){
-  #arrange counts in order of increasing number of samples taxa are present in
-  NP = names(sort(apply(counts, 2, Matrix::nnzero)))
-  return(NP)
-}
 
 #' @name FL
 #' @usage Determine the filtering loss (FL) for count
