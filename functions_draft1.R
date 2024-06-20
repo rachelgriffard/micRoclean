@@ -112,7 +112,7 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   
   # SCRuB
   scr_out = SCRuB::SCRuB(counts, 
-                  metadata = meta[,-3],
+                  metadata = meta %>% select(tidyselect::any_of(c('is_control', 'sample_type', 'sample_well'))),
                   control_order = control_order)
   sc_counts = data.frame(scr_out$decontaminated_samples)
   
