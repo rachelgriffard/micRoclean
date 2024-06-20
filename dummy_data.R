@@ -3,20 +3,6 @@ dat = read.csv("Level6_Genus.csv", header=T,row.name=1)
 batch = dat$Batch
 group = dat$Groups
 
-### dummy meta data
-control = group
-control = control == "Negative Control"
-
-sample = group
-sample[!sample == "Negative Control"] = "Plasma"
-
-meta = data.frame("is_control" = control,
-                  "sample" = sample,
-                  "batch" = batch)
-rownames(meta) = rownames(dat)
-
-dat = as.matrix(dat)
-
 index = grep(".*.g__*", colnames(dat)) # keep if have IDed datus
 dat = dat[,index]
 comp = data.frame(colnames(dat))
@@ -36,8 +22,13 @@ res = read.csv('res_toydata.csv')
 ### dummy data for FL function
 removed = sample(rownames(FL), 100)
 
+### dummy meta data
+control = group
+control = control == "Negative Control"
+
 sample = group
-sample[!sample == "Control"] = "Plasma"
+sample[!sample == "Negative Control"] = "Plasma"
+sample[sample == "Negative Control"] = "Control"
 
 dat = as.matrix(dat)
 
@@ -45,7 +36,6 @@ meta = data.frame("is_control" = control,
                   "sample_type" = sample,
                   "batch" = batch)
 rownames(meta) = rownames(dat)
-
 
 ### dummy technical replicates (p2s3)
 technical_replicates = data.frame("Batch1" = c("Old_trimmed_2", "Old_trimmed_86",

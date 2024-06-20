@@ -52,7 +52,7 @@ well2well = function(counts, meta, seed = 42) {
   
   # order samples by name convention
   meta = meta %>%
-    arrange(batch ,as.numeric(str_extract(rownames(meta), "\\d+$")))
+    arrange(batch, as.numeric(str_extract(rownames(meta), "\\d+$")))
   
   # append potential horizontal and vertical well orders together
 
