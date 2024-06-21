@@ -1,4 +1,4 @@
-# micRoclean: an R package Decontamination Pipeline for Low-Biomass Microbiome Data
+# micRoclean: Decontamination for Low-Biomass Microbiome Data
 
 <img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/micRoclean.svg" height = "200" align = "right">
 
