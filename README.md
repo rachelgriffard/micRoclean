@@ -12,6 +12,7 @@ Please **download** the [vignette file](https://github.com/rachelgriffard/micRoc
 To install the micRoclean package, users should use the *install_github* function from the **devtools** package. The full command is as follows:
 ```
 devtools::install_github("rachelgriffard/micRoclean")
+library(micRoclean)
 ```
 
 The latest micRoclean release is available for download from the [repository](https://github.com/rachelgriffard/micRoclean).
@@ -47,9 +48,61 @@ head(metadata)
 | | is_control | sample_type | batch | sample_well |
 | :-------------: | ------------- |------------- |------------- |------------- |
 | Sample_1  |  FALSE | plasma_1 | A| A2|
-| Sample_2  |  FALSE | plasma_1 | A| A4|
+| Sample_2  |  FALSE | plasma_1 | B| A4|
 | Sample_3  |  TRUE | DNA extraction control | B| B3| 
 | Sample_4  |  FALSE | plasma_2 | A| B1|
 | Sample_5  |  TRUE | DNA extraction control | B| B4|
 | Sample_6  |  FALSE | plasma_2 | B| C12|
 
+### Pipeline 1
+This pipeline should be used when the user:
+1. Has sample well information available
+2. Wants to primarily characterize the original composition of the sample prior to contamination
+
+To run this pipeline, the user can input their data as such:
+```
+pipeline_1_results = pipeline1(counts = counts,
+                               meta = metadata)
+```
+Once run, the pipeline will return a list object with:
+1. *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (p) matrix with the decontaminated counts
+2. *Filtering loss value (FL)* - A numeric value between 0 and 1
+
+### Pipeline 2
+This pipeline should be used when the user:
+1. Wants to primarily identify potential biomarkers
+2. Does not have sample well information available
+
+To run this pipeline, the user can input their data as such:
+```
+pipeline_2_results = pipeline2(counts = counts,
+                               meta = metadata,
+                               blocklist = bl,
+                               technical_replicates = tr,
+                               remove_if = 1, #optional
+                               step2_threshold = 0.5) #optional
+```
+Where:
+* *blocklist* - character string
+* *technical_replicates* - Data frame indicating pairs of technical replicates across batches by sample name. See example below where Sample 1 and Sample 6 are technical replicates.
+
+| *batch_1* | *batch_2* |
+| ------------- | ------------- |
+| Sample_1  |  Sample_6 |
+| Sample_2  |  Sample_4 |
+
+Once run, the pipeline will return a list object with:
+1. *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by non-contaminant features (p - c) matrix with the decontaminated counts
+2. *Filtering loss value (FL)* - A numeric value between 0 and 1
+3. *Contaminant ID (contaminant_id)* - Dataframe with features (p) by removal steps and boolean value indicating TRUE if tagged as contaminant in that step, FALSE otherwise.
+4. *Removed (removed)* - Character vector of all samples tagged as contaminants and removed from the decontaminated count matrix
+
+Optionally, users can input their results list object from pipeline2 into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization is interactive.
+```
+visualize_pipeline(pipeline_2_results,
+                   interactive = FALSE)
+```
+![VennExample](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963)
+
+
+### Filtering loss
