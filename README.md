@@ -14,7 +14,7 @@ To install the micRoclean package, users should use the *install_github* functio
 devtools::install_github("rachelgriffard/micRoclean")
 ```
 
-The latest opitma release is available for download from the [repository](https://github.com/rachelgriffard/micRoclean).
+The latest micRoclean release is available for download from the [repository](https://github.com/rachelgriffard/micRoclean).
 
 ## Usage
 
@@ -34,6 +34,8 @@ head(counts)
 | Sample_2  |  15 | 5 | 0|0 |
 | Sample_3  |  0 | 13 | 0| 200 |
 | Sample_4  |  4 | 5 | 0| 0 |
+| Sample_5  |  0 | 1 | 6| 0 |
+| Sample_6  |  6 | 14 | 21| 2 |
 3. *Metadata* - A metadata matrix with samples (n) as rows and two required columns *is_control* and *sample_type*. Two optional columns can be included named *batch* and *sample_well*. It is important that the naming scheme of the columns for the metadata match as seen below.
   * *is_control* - Boolean variable where *TRUE* indicates a extraction negative control sample and *FALSE* otherwise.
   * *sample_type* - Sample types named by string, indicating which samples should be read together.
@@ -44,8 +46,10 @@ head(metadata)
 ```
 | | is_control | sample_type | batch | sample_well |
 | :-------------: | ------------- |------------- |------------- |------------- |
-| Sample_1  |  FALSE | plasma | A| A2|
-| Sample_2  |  FALSE | plasma | A| A4|
+| Sample_1  |  FALSE | plasma_1 | A| A2|
+| Sample_2  |  FALSE | plasma_1 | A| A4|
 | Sample_3  |  TRUE | DNA extraction control | B| B3| 
-| Sample_4  |  FALSE | plasma | B| B1|
+| Sample_4  |  FALSE | plasma_2 | A| B1|
+| Sample_5  |  TRUE | DNA extraction control | B| B4|
+| Sample_6  |  FALSE | plasma_2 | B| C12|
 
