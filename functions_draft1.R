@@ -26,6 +26,7 @@ library(irr) # pipeline 2 step3
 #' @usage Determine the potential impact of spatial well to well relationships
 #'
 #' @import dplyr
+#' @import SCRuB SCRuB
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name
@@ -66,11 +67,9 @@ well2well = function(counts, meta, seed = 42) {
   
   sample_well = c(vert[1:num_b[1]], vert[1:num_b[2]])
   meta_vert = cbind(meta, sample_well)
-  meta_vert = subset(meta_vert, select = c(is_control, sample_type, sample_well))
   
   sample_well = c(horiz[1:num_b[1]], horiz[1:num_b[2]])
   meta_horiz = cbind(meta, sample_well)
-  meta_horiz = subset(meta_horiz, select = c(is_control, sample_type, sample_well))
   
   # order counts by name convention for SCRuB function
   counts = as.data.frame(counts) %>%
@@ -78,12 +77,38 @@ well2well = function(counts, meta, seed = 42) {
     arrange(`meta$batch`, as.numeric(str_extract(rownames(counts), "\\d+$"))) %>%
     mutate(`meta$batch` = NULL)
   
-  # create SCRuB objects
-  SCRuB_vert = SCRuB::SCRuB(counts,
-                     meta_vert)
+  # create SCRuB objects by batch
+  sc_outs_vert = list()
+  for(b in unique(meta_vert$batch)) {
+    index = meta_vert %>% filter(batch == b) %>% row.names()
     
-  SCRuB_horiz = SCRuB::SCRuB(counts,
-                      meta_horiz)
+    sc_outs_vert[[b]] = SCRuB(counts[index,],
+                              meta_vert[index,] %>%
+                                select(is_control, sample_type, sample_well))
+  }
+  
+  sc_outs_horiz = list()
+  for(b in unique(meta_horiz$batch)) {
+    index = meta_horiz %>% filter(batch == b) %>% row.names()
+    
+    sc_outs_horiz[[b]] = SCRuB(counts[index,],
+                              meta_horiz[index,] %>%
+                                select(is_control, sample_type, sample_well))
+  }
+  
+  sc_outs = list()
+  for(b in unique(meta$batch)) {
+    index = meta %>% filter(batch == b) %>% row.names()
+    
+    sc_outs[[b]] = SCRuB(counts[index,],
+                              meta[index,] %>%
+                                select(is_control, sample_type))
+  }
+  
+  # append batches back together for full, decontaminated dataframe
+  SCRuB_vert = 
+    
+  SCRuB_horiz = 
   
   # output
   return(list('Vertical' = data.frame(SCRuB_vert$decontaminated_samples),
