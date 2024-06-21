@@ -233,10 +233,10 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   
   # Create deliverable
   
-  deliv = list('contaminant_id' = res,
-               'decontaminated_count' = final_counts,
-               'removed' = removed,
+  deliv = list('decontaminated_count' = final_counts,
                'filtering_loss' = FL,
+               'contaminant_id' = res,
+               'removed' = removed,
                'pipeline' = 'pipeline2')
   
   return(deliv)
