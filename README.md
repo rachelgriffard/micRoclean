@@ -1,5 +1,8 @@
-![micRoclean](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/d443e626-6eab-4723-821e-5c7bc5477593)
+# micRoclean: an R package Decontamination Pipeline for Low-Biomass Microbiome Data
 
+<img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/micRoclean.svg" height = "200" align = "right">
+
+micRoclean contains two decontamination pipelines aimed at low-biomass microbiome data.
 
 ![Alt Flow](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/d6ee9002-6f81-4719-8554-26b50aa50080)
 
