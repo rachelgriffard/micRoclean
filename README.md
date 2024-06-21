@@ -4,7 +4,7 @@
 
 micRoclean contains two decontamination pipelines aimed at low-biomass microbiome data.
 
-![Alt Flow](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/d6ee9002-6f81-4719-8554-26b50aa50080)
+<img src="https://github.com/rachelgriffard/micRoclean_development/assets/95938614/1f204296-9909-479b-955d-ce1fed69142b" width = "1000" align = "center">
 
 Example data frames for README.md file micRoclean
 
