@@ -1,3 +1,11 @@
+# micRoclean: Decontamination for Low-Biomass Microbiome Data
+
+<img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/micRoclean.svg" height = "200" align = "right">
+
+micRoclean contains two decontamination pipelines aimed at low-biomass microbiome data.
+
+<img src="https://github.com/rachelgriffard/micRoclean_development/assets/95938614/1f204296-9909-479b-955d-ce1fed69142b" width = "1000" align = "center">
+
 Example data frames for README.md file micRoclean
 
 Samples should be named with numbers at the end of the string and restart from one batch to the next.
