@@ -2,9 +2,9 @@
 
 <img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/micRoclean.svg" height = "200" align = "right">
 
-micRoclean contains two  pipelines aimed at decontaminating low-biomass microbiome data.
+micRoclean contains two pipelines aimed at decontaminating low-biomass microbiome data.
 
-**For questions on installation or usage, please submit an issue or discussion via GitHub**
+**For questions on installation or usage, please submit an issue or discussion via GitHub.**
 
 Please **download** the [vignette file](https://github.com/rachelgriffard/micRoclean/blob/main/vignette.html) file in this repository for a detailed run through of this package functionality.
 
@@ -59,7 +59,7 @@ This pipeline should be used when the user:
 1. Has sample well information available
 2. Wants to primarily characterize the original composition of the sample prior to contamination
 
-To run this pipeline, the user can input their data as such:
+This pipeline implements the SCRuB method for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 ```
 pipeline_1_results = pipeline1(counts = counts,
                                meta = metadata)
@@ -105,4 +105,10 @@ visualize_pipeline(pipeline_2_results,
 ![VennExample](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963)
 
 
-### Filtering loss
+### Filtering loss (FL)
+First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one
+
+## References
+Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. https://doi.org/10.1038/s41587-023-01696-w 
+
+Smirnova, E., Huzurbazar, S., & Jafari, F. (2019). PERFect: PERmutation Filtering test for microbiome data. Biostatistics (Oxford, England), 20(4), 615–631. https://doi.org/10.1093/biostatistics/kxy020
