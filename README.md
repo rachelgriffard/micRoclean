@@ -104,11 +104,14 @@ visualize_pipeline(pipeline_2_results,
 ```
 ![VennExample](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963)
 
-
 ### Filtering loss (FL)
-First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one
+First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one, indicating low to high contribution respectively from the removed features to the total convariance structure. High values indicate a sign of overfiltering.
+
+Filtering loss for J removal is defined as:
+
+$$FL(J) = 1 - \frac{\|X^T_{-J} X_{-J}\|_F^2}{\|X^TX\|_F^2}$$
 
 ## References
-Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. https://doi.org/10.1038/s41587-023-01696-w 
+Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. [https://doi.org/10.1038/s41587-023-01696-w](https://doi.org/10.1038/s41587-023-01696-w) 
 
-Smirnova, E., Huzurbazar, S., & Jafari, F. (2019). PERFect: PERmutation Filtering test for microbiome data. Biostatistics (Oxford, England), 20(4), 615–631. https://doi.org/10.1093/biostatistics/kxy020
+Smirnova, E., Huzurbazar, S., & Jafari, F. (2019). PERFect: PERmutation Filtering test for microbiome data. Biostatistics (Oxford, England), 20(4), 615–631. [https://doi.org/10.1093/biostatistics/kxy020](https://doi.org/10.1093/biostatistics/kxy020)
