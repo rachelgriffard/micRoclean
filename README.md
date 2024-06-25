@@ -113,9 +113,11 @@ Filtering loss for J removal is defined as:
 
 $$FL(J) = 1 - \frac{\|X^T_{-J} X_{-J}\|_F^2}{\|X^TX\|_F^2}$$
 
-For more information, users are suggested to read the methods section of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
+For more information, users are suggested to read the methods section 2.1 of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
 
 ## References
 Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. [https://doi.org/10.1038/s41587-023-01696-w](https://doi.org/10.1038/s41587-023-01696-w) 
+
+Davis, N.M., Proctor, D.M., Holmes, S.P. et al. Simple statistical identification and removal of contaminant sequences in marker-gene and metagenomics data. Microbiome 6, 226 (2018). [https://doi.org/10.1186/s40168-018-0605-2](https://doi.org/10.1186/s40168-018-0605-2)
 
 Smirnova, E., Huzurbazar, S., & Jafari, F. (2019). PERFect: PERmutation Filtering test for microbiome data. Biostatistics (Oxford, England), 20(4), 615–631. [https://doi.org/10.1093/biostatistics/kxy020](https://doi.org/10.1093/biostatistics/kxy020)
