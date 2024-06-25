@@ -1,0 +1,10 @@
+# ignore R history and data files
+.RData
+.RHistory
+
+# ignore data
+.xlsx
+.csv
+
+# ignore documents
+.docx
