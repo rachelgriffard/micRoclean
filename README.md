@@ -59,6 +59,8 @@ This pipeline should be used when the user:
 1. Has sample well information available
 2. Wants to primarily characterize the original composition of the sample prior to contamination
 
+Furthermore, users must have control samples present in each batch for this method to be used.
+
 This pipeline implements the SCRuB method for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 ```
 pipeline_1_results = pipeline1(counts = counts,
