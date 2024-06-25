@@ -169,10 +169,8 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   
   sc_counts = do.call(rbind, sc_outs) # append batches back together
 
-  
+  # Identify filtering loss
   sc_FL = FL(counts, new_counts = sc_counts)
-  
-  # extract FL values from SCRuB data
   
   
   # Create deliverable
