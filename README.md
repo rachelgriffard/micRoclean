@@ -111,6 +111,8 @@ Filtering loss for J removal is defined as:
 
 $$FL(J) = 1 - \frac{\|X^T_{-J} X_{-J}\|_F^2}{\|X^TX\|_F^2}$$
 
+For more information, users are suggested to read the methods section of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
+
 ## References
 Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. [https://doi.org/10.1038/s41587-023-01696-w](https://doi.org/10.1038/s41587-023-01696-w) 
 
