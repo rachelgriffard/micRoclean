@@ -126,6 +126,8 @@ well2well = function(counts, meta, seed = 42) {
 
 #' @name pipeline1
 #' @usage
+#' 
+#' @importFrom tidyverse %>%
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Data frame with columns is_control, sample_type, and (optional) sample_well
@@ -137,13 +139,32 @@ well2well = function(counts, meta, seed = 42) {
 
 pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   
+  # check to ensure each batch contains some controls
+  for(b in batch) {
+    index = meta %>% filter(batch == b) %>% row.names() # select within batch
+    
+    if (sum(meta[index, 'is_control']==TRUE) == 0) {
+      stop(paste0('To use pipeline1, all batches must contain controls. Batch named  ', 
+                  b, ' does not contain samples specified as controls.', sep = '')) # break loop if missing
+    }
+  }
+  
   set.seed(seed)
   
+  batch = unique(meta$batch)
+  
   # SCRuB
-  scr_out = SCRuB::SCRuB(counts, 
-                  metadata = meta %>% select(tidyselect::any_of(c('is_control', 'sample_type', 'sample_well'))),
-                  control_order = control_order)
-  sc_counts = data.frame(scr_out$decontaminated_samples)
+  sc_outs = list() # get count matrices from batches scrubbed separately
+  for(b in batch) {
+    index = meta %>% filter(batch == b) %>% row.names() # select only of one batch
+    
+    sc_outs[[b]] = SCRuB::SCRuB(counts[index,],
+                         meta[index,] %>%
+                           select(any_of(c('is_control', 'sample_type', 'sample_well'))))$decontaminated_samples
+  }
+  
+  sc_counts = do.call(rbind, sc_outs) # append batches back together
+
   
   sc_FL = FL(counts, new_counts = sc_counts)
   
