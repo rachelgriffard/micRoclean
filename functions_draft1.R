@@ -26,7 +26,8 @@ library(irr) # pipeline 2 step3
 #' @usage Determine the potential impact of spatial well to well relationships
 #'
 #' @import dplyr
-#' @import SCRuB SCRuB
+#' @importFrom SCRuB SCRuB
+#' @importFrom vegan vegdist mantel
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name
@@ -84,7 +85,7 @@ well2well = function(counts, meta, seed = 42) {
     
     sc_outs_vert[[b]] = SCRuB(counts[index,],
                               meta_vert[index,] %>%
-                                select(is_control, sample_type, sample_well))
+                                select(is_control, sample_type, sample_well))$decontaminated_samples
   }
   
   sc_outs_horiz = list()
@@ -93,7 +94,7 @@ well2well = function(counts, meta, seed = 42) {
     
     sc_outs_horiz[[b]] = SCRuB(counts[index,],
                               meta_horiz[index,] %>%
-                                select(is_control, sample_type, sample_well))
+                                select(is_control, sample_type, sample_well))$decontaminated_samples
   }
   
   sc_outs = list()
@@ -102,21 +103,24 @@ well2well = function(counts, meta, seed = 42) {
     
     sc_outs[[b]] = SCRuB(counts[index,],
                               meta[index,] %>%
-                                select(is_control, sample_type))
+                                select(is_control, sample_type))$decontaminated_samples
   }
   
   # append batches back together for full, decontaminated dataframe
-  SCRuB_vert = 
+  SCRuB_vert = do.call(rbind, sc_outs_vert) # append batches back together
     
-  SCRuB_horiz = 
+  SCRuB_horiz = do.call(rbind, sc_outs_horiz) # append batches back together
+    
+  SCRuB = do.call(rbind, sc_outs) # append batches back together
     
     
   # determine if vert/horiz significantly different from without spatial
-  vegan::mantel(vegan::vegdist(SCRuB), vegan::vegdist(SCRuB_vert)) # maybe, but will have to match columns/zero out if missing
+  res_vert = mantel(vegdist(SCRuB), vegdist(SCRuB_vert)) # maybe, but will have to match columns/zero out if missing
+  
+  res_horiz = mantel(vegdist(SCRuB), vegdist(SCRuB_horiz)) # maybe, but will have to match columns/zero out if missing
   
   # output
-  return(# some statistic here
-    )
+  return()
 }
 
 # Function 1: Pipeline 1 - SCRuB + PERfect
