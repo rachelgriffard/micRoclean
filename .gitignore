@@ -1,5 +1,5 @@
 # ignore files in the ignore directory
-.ignore/
+ignore/
 
 # ignore RData and environment
 .RData
