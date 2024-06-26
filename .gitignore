@@ -1,2 +1,6 @@
 # ignore files in the ignore directory
 .ignore/
+
+# ignore RData and environment
+.RData
+.Rhistory
