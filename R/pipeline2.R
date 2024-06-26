@@ -21,7 +21,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   set.seed(seed)
   
   # Step 0: W2W check
-  #  w2w = well2well(counts, meta, seed = seed)
+  well2well(counts, meta, seed = seed)
   
   # Step 1: Remove features that showed different abundance in different batches
   ## ancombc comparison across batches
