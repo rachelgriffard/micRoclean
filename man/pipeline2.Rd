@@ -2,10 +2,19 @@
 % Please edit documentation in R/pipeline2.R
 \name{pipeline2}
 \alias{pipeline2}
-\title{pipeline2}
-\usage{
+\title{pipeline2
 Pipeline 2 is best used when the main goal is to identify potential biomarkers, rather than characterize the original
-composition.
+composition.}
+\usage{
+pipeline2(
+  counts,
+  meta,
+  blocklist,
+  technical_replicates,
+  remove_if = 1,
+  step2_threshold = 0.5,
+  seed = 42
+)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -28,6 +37,8 @@ and filtering loss (FL) statistic
 }
 \description{
 pipeline2
+Pipeline 2 is best used when the main goal is to identify potential biomarkers, rather than characterize the original
+composition.
 }
 \seealso{
 Other pipeline2: 

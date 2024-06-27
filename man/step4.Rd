@@ -4,8 +4,7 @@
 \alias{step4}
 \title{step4}
 \usage{
-Run step 4 of pipeline 2 to identify features previously identified as contaminants
-based on blocklist
+step4(counts, blocklist)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -18,7 +17,8 @@ based on blocklist
 Vector of features tagged as contaminants
 }
 \description{
-step4
+Run step 4 of pipeline 2 to identify features previously identified as contaminants
+based on blocklist
 }
 \seealso{
 Other pipeline2: 

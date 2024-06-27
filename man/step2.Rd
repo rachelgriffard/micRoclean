@@ -4,8 +4,7 @@
 \alias{step2}
 \title{step2}
 \usage{
-Run step 2 of pipeline 2 to identify features that are expressed higher in negative
-controls and lower in samples
+step2(counts, meta, threshold)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -18,7 +17,8 @@ controls and lower in samples
 Vector of features tagged as contaminants
 }
 \description{
-step2
+Run step 2 of pipeline 2 to identify features that are expressed higher in negative
+controls and lower in samples
 }
 \seealso{
 Other pipeline2: 

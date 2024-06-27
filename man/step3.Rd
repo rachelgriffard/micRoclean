@@ -4,8 +4,7 @@
 \alias{step3}
 \title{step3}
 \usage{
-Run step 3 of pipeline 2 to identify features with different abundance in technical
-replicates across batches
+step3(counts, technical_replicates)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -18,7 +17,8 @@ replicates across batches
 Vector of features tagged as contaminants
 }
 \description{
-step3
+Run step 3 of pipeline 2 to identify features with different abundance in technical
+replicates across batches
 }
 \seealso{
 Other pipeline2: 

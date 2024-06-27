@@ -2,9 +2,10 @@
 % Please edit documentation in R/visualize.R
 \name{visualize_pipeline}
 \alias{visualize_pipeline}
-\title{visualize_pipeline}
+\title{visualize_pipeline
+Visualize results from the pipelines within the package}
 \usage{
-Visualize results from the pipelines within the package
+visualize_pipeline(pipeline_output, interactive = FALSE)
 }
 \arguments{
 \item{pipeline_output}{Output of pipeline object}
@@ -16,4 +17,5 @@ Visualizations relating to pipeline object
 }
 \description{
 visualize_pipeline
+Visualize results from the pipelines within the package
 }

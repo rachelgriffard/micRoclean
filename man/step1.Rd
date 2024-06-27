@@ -4,8 +4,7 @@
 \alias{step1}
 \title{step1}
 \usage{
-Run step 1 of pipeline 2 to identify features that are differentially abundant
-between batches
+step1(counts, meta)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -16,7 +15,8 @@ between batches
 Vector of features tagged as contaminants
 }
 \description{
-step1
+Run step 1 of pipeline 2 to identify features that are differentially abundant
+between batches
 }
 \seealso{
 Other pipeline2: 

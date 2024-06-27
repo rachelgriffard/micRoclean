@@ -2,10 +2,11 @@
 % Please edit documentation in R/management_functions.R
 \name{FL}
 \alias{FL}
-\title{FL}
-\usage{
+\title{FL
 Determine the filtering loss (FL) for count
-data based on removed features (adjusted from katiasmirn/PERfect/FL_J.R)
+data based on removed features (adjusted from katiasmirn/PERfect/FL_J.R)}
+\usage{
+FL(counts, new_counts = NULL, removed = NULL)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -19,4 +20,6 @@ Data frame with features as row names and associated filtering loss value
 }
 \description{
 FL
+Determine the filtering loss (FL) for count
+data based on removed features (adjusted from katiasmirn/PERfect/FL_J.R)
 }

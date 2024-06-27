@@ -4,8 +4,7 @@
 \alias{unwrap_phyloseq}
 \title{unwrap_phyloseq}
 \usage{
-Take input phyloseq object and "unwrap" data into matrices expected as input for functions in
-micRoclean package.
+unwrap_phyloseq(phyloseq)
 }
 \arguments{
 \item{phyloseq}{Phyloseq object to unwrap into required count and meta matrices for pipeline functions}
@@ -14,7 +13,8 @@ micRoclean package.
 List containing counts and metadata data frames for input into pipeline functions
 }
 \description{
-unwrap_phyloseq
+Take input phyloseq object and "unwrap" data into matrices expected as input for functions in
+micRoclean package.
 }
 \seealso{
 Other management: 

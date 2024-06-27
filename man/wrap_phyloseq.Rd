@@ -4,7 +4,7 @@
 \alias{wrap_phyloseq}
 \title{wrap_phyloseq}
 \usage{
-Wrap count matrix and metadata into a phyloseq object
+wrap_phyloseq(counts, meta)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
@@ -15,7 +15,7 @@ Wrap count matrix and metadata into a phyloseq object
 List containing counts and metadata data frames for input into pipeline functions
 }
 \description{
-wrap_phyloseq
+Wrap count matrix and metadata into a phyloseq object
 }
 \seealso{
 Other management: 
