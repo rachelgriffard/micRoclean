@@ -1,5 +1,6 @@
-#' @name pipeline1
-#' @usage Using the SCRuB method, this pipeline is best used when the user wants
+#' pipeline1
+#'
+#' Using the SCRuB method, this pipeline is best used when the user wants
 #' to closely characterize the composition of the data prior to contamination.
 #'
 #' @family pipeline1

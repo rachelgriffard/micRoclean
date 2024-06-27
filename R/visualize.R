@@ -1,5 +1,6 @@
-#' @name visualize_pipeline
-#' @usage Visualize results from the pipelines within the package
+#' visualize_pipeline
+
+#' Visualize results from the pipelines within the package
 #'
 #' @param pipeline_output Output of pipeline object
 #' @param interactive TRUE if user wants interactive plot output
@@ -7,11 +8,11 @@
 #' @exportClass list
 
 visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
-  
+
   if (pipeline_output$pipeline == 'pipeline1') {
     warning('micRoclean does not currently have functionality to visualize SCRuB decontamination')
   }
-  
+
   if (pipeline_output$pipeline == 'pipeline2') {
     # import data
     s1_rem = pipeline_output$contaminant_id$feature[pipeline_output$contaminant_id$step1==TRUE]
@@ -30,20 +31,20 @@ visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
       labs(title="Taxa Removal by Step") +
       theme(legend.position="none", plot.title=element_text(size=25, hjust = 0.5)) +
       scale_fill_distiller(palette = "Spectral")
-    
+
     if (interactive == FALSE) {
       return(p)
     }
-    
+
     if (interactive == TRUE) {
       return(plotly::ggplotly(p))
     }
-    
+
     else {
       warning('interactive must be set to TRUE or FALSE.')
     }
   }
-  
+
   else {
     warning('Rerun data through pipeline and ensure object in visualize_pipeline is output from pipeline1 or pipeline2.')
   }
