@@ -1,9 +1,9 @@
 Package: micRoclean
-Title: What the Package Does (One Line, Title Case)
+Title:  Decontamination Pipelines for Low-Biomass Microbiome Data
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("Rachel", "Griffard", , "rgriffard@kumc.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0002-3330-695X"))
 Description: What the package does (one paragraph).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
