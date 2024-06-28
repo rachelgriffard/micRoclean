@@ -10,6 +10,7 @@
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name
 #' @param seed Random seed
+#' @export
 
 well2well = function(counts, meta, seed = 42) {
   # basic horiz/vert sort for now
