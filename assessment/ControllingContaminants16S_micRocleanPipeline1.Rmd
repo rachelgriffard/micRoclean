@@ -1,0 +1,139 @@
+---
+title: "Controlling Contaminants with micRoclean Pipeline 2"
+author: "Rachel Griffard"
+date: '7/2/24'
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+### Introduction
+
+We are comparing our package and pipelines within micRoclean to a study
+performed previously evaluating decontam, SourceTracker, MicrobIEM, and
+Filtering from Hulpusch et al., 2021. This document is created to mimic
+those analyses, which can be [found
+here.](https://github.com/lakarstens/ControllingContaminants16S/tree/master/Analyses)
+
+We provide the compiled R Markdown documents to reproduce the analysis
+presented in the manuscript, divided into 4 primary sections:
+
+-   [Introduction and evaluating
+    contaminants](./ControllingContaminants16S.Rmd)
+-   [Removing contaminant ASVs with
+    micRoclean](./ControllingContaminants16S_decontam.Rmd)
+-   Removing contaminant ASVs with SourceTracker (this document)
+-   [Evaluating micRoclean
+    results](./ControllingContaminants16S_SourceTracker.Rmd)
+
+Here, we provide the compiled R Markdown document to reproduce running
+SourceTracker for identifying and removing contaminants as presented in
+the manuscript.
+
+For more information about the experimental design and preprocessing of
+the data, see the **Introduction and evaluating contaminants**.
+
+### Using micRoclean for contaminant identification and removal
+
+micRoclean is a tool that implements the SCRuB decontamination method.
+More information about SCRuB can be found in the
+[manuscript](https://www.nature.com/articles/s41587-023-01696-w). SCRuB
+was initially implemented in R, which is the version used here. The
+sourcecode for running SCRuB in R is available
+[here](https://github.com/Shenhav-and-Korem-labs/SCRuB?tab=readme-ov-file).
+
+We evaluated micRoclean Pipeline1 to identify contaminants in a 16S rRNA
+sequencing experiment consisting of a dilution series of a mock
+microbial community.
+
+### Set up the workspace
+
+```{r set workspace}
+# load libraries
+library(tidyverse)
+library(phyloseq)
+library(knitr)
+library(micRoclean)
+
+# save session info (packages versions loaded)
+session <- sessionInfo()
+
+# Load data
+load('mockDilutionsPrep.RData')
+```
+
+This data set includes many objects, 4 that are important for this
+analysis: \* mock_ps - a phyloseq object containing all of the mock
+microbial dilution series \* mock_ps_pure - a phyloseq object containing
+only the expected sequences from the undiluted mock microbial sample
+(D0) \* contaminants_ps - a phyloseq object containing only the
+unexpected sequences from the mock microbial dilution series \*
+blank_ps - a phyloseq object containing only the blank extraction
+control sample
+
+To prepare these samples for micRoclean, we need to create the expected counts
+and meta matrices as expected. This can be further explored via the README file and vignette
+for micRoclean, found [here](https://github.com/rachelgriffard/micRoclean).
+
+```{r}
+# counts
+counts = data.frame(ps@otu_table)
+
+# meta
+meta = data.frame(ps@sam_data)[,c(5,6)]
+colnames(meta) = c('sample_type', 'is_control')
+
+# tax
+tax = data.frame(tax_table(ps@tax_table)) %>%
+  unite(tax, c("Kingdom","Phylum","Class","Order","Family","Genus"))
+
+colnames(counts) = tax[,1]
+
+head(counts) %>%
+  kable()
+
+head(meta) %>%
+  kable()
+```
+
+We want to retain our information about the known contaminats.
+```{r}
+load('mock_taxa.RData')
+
+mock_taxa = data.frame('Symbol' = unlist(mock_taxa))
+
+mock_taxa = tax %>%
+  rownames_to_column(var = 'Symbol') %>%
+  right_join(mock_taxa, by = 'Symbol')
+```
+
+
+We are going to clean up the workspace so that
+only the variables we need for micRoclean are kept.
+
+```{r}
+# clean up the workspace
+
+# remove all variables except those below
+varsToKeep <- c('counts','meta','mock_taxa')
+rm(list=ls()[! ls() %in% varsToKeep])
+```
+
+Next, we will run our micRoclean pipeline1 function.
+
+```{r }
+p1_res = pipeline1(counts, meta)
+de_cont = p1_res$decontaminated_count
+```
+
+Save the workspace image of pipeline1 run.
+
+```{r}
+# Save workspace
+save.image("mockDilutions_RunmicRocleanpipeline1.RData")
+```
+
+# Evaluate micRoclean pipeline1
+## Summarize results
+
