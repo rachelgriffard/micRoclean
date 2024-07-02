@@ -75,6 +75,9 @@ This pipeline should be used when the user:
 1. Wants to primarily identify potential biomarkers
 2. Does not have sample well information available
 
+Pipeline 2 contains multiple steps to identify potential contaminants, as visualized here:
+<img src = "https://github.com/rachelgriffard/micRoclean/assets/95938614/f7c3290e-026a-4d53-9939-e737ea400da1" align = "center" height = 400>
+
 To run this pipeline, the user can input their data as such:
 ```
 pipeline_2_results = pipeline2(counts = counts,
