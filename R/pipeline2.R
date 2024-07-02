@@ -203,9 +203,11 @@ step3 = function(counts, technical_replicates) {
 #' step4
 #'
 #' Run step 4 of pipeline 2 to identify features previously identified as contaminants
-#' based on blocklist
+#' based on blocklist. Requires blocklist items of the lowest taxonomy.
 #'
 #' @family pipeline2
+#'
+#' @import DescTools
 #'
 #' @param blocklist List of known previously identified contaminant features
 #' @param counts Count matrix with samples as rows and features as counts
@@ -221,5 +223,10 @@ step4 = function(counts, blocklist) {
     break
   }
 
-  return(allTaxa[(allTaxa %in% blocklist)])
+  for (i in length(blocklist)) {
+    blocklist = paste0('%', blocklist)
+    blocklist = paste0(blocklist, '%')
+  }
+
+  return(allTaxa[(allTaxa %like any% blocklist)])
 }
