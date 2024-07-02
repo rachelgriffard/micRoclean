@@ -13,7 +13,7 @@
 #' @param seed Random seed
 #' @return List object with contaminant matrix, decontaminated count matrix, character string of all removed contaminants,
 #' and filtering loss (FL) statistic
-#' @exportClass list
+#' @export
 
 pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 1,
                      step2_threshold = 0.5, seed = 42) {
@@ -90,7 +90,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
 #' @family pipeline2
 #'
 #' @return  Vector of features tagged as contaminants
-#' @exportClass vector
+#' @export
 
 step1 = function(counts, meta) {
 
@@ -129,7 +129,7 @@ step1 = function(counts, meta) {
 #' @param meta Matrix with columns is_control, sample_type, and batch
 #' @param threshold Threshold value for prevalence method of decontam
 #' @return Vector of features tagged as contaminants
-#' @exportClass vector
+#' @export
 
 step2 = function(counts, meta, threshold) {
 
@@ -160,7 +160,7 @@ step2 = function(counts, meta, threshold) {
 #' @param meta Matrix with columns is_control, sample_type, and batch
 #' @param technical_replicates Matrix identifying technical replicates across batches with batch as column and rows matching replicates
 #' @return Vector of features tagged as contaminants
-#' @exportClass vector
+#' @export
 
 step3 = function(counts, technical_replicates) {
 
@@ -213,7 +213,7 @@ step3 = function(counts, technical_replicates) {
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Matrix with columns is_control, sample_type, and batch
 #' @return Vector of features tagged as contaminants
-#' @exportClass vector
+#' @export
 
 step4 = function(counts, blocklist) {
   allTaxa = colnames(counts)

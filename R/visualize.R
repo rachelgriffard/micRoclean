@@ -5,7 +5,7 @@
 #' @param pipeline_output Output of pipeline object
 #' @param interactive TRUE if user wants interactive plot output
 #' @return Visualizations relating to pipeline object
-#' @exportClass list
+#' @export
 
 visualize_pipeline = function(pipeline_output, interactive = FALSE)  {
 

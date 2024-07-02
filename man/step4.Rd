@@ -18,7 +18,7 @@ Vector of features tagged as contaminants
 }
 \description{
 Run step 4 of pipeline 2 to identify features previously identified as contaminants
-based on blocklist
+based on blocklist. Requires blocklist items of the lowest taxonomy.
 }
 \seealso{
 Other pipeline2: 

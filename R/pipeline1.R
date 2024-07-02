@@ -13,7 +13,7 @@
 #' @param seed Random seed
 #' @return List object with original matrix, decontaminated matrix, and corresponding
 #' filtering loss (FL) statistics
-#' @exportClass list
+#' @export
 
 pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 

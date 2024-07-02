@@ -8,7 +8,7 @@
 #' @import phyloseq
 #' @param phyloseq Phyloseq object to unwrap into required count and meta matrices for pipeline functions
 #' @return List containing counts and metadata data frames for input into pipeline functions
-#' @exportClass list
+#' @export
 
 unwrap_phyloseq = function(phyloseq) {
   counts = data.frame(t(phyloseq@otu_table)) # requires data frame first, will not coerce to matrix from phyloseq object
@@ -28,7 +28,7 @@ unwrap_phyloseq = function(phyloseq) {
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta dataframe with columns is_control, sample_type
 #' @return List containing counts and metadata data frames for input into pipeline functions
-#' @exportClass phyloseq
+#' @export
 
 wrap_phyloseq = function(counts, meta) {
   counts = t(counts) # transpose to fit with expectation of phyloseq object
@@ -51,7 +51,7 @@ wrap_phyloseq = function(counts, meta) {
 #' @param new_counts Count matrix with samples as rows and features as counts after being partially filtered by SCRuB method
 #' @param removed Vector of features to be removed as contaminants
 #' @return Data frame with features as row names and associated filtering loss value
-#' @exportClass data.frame
+#' @export
 
 FL = function(counts, new_counts = NULL, removed = NULL){
 
