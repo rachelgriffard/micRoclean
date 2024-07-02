@@ -6,3 +6,7 @@ ignore/
 .Rhistory
 .Rproj.user
 inst/doc
+.Rbuildignore
+
+# ignore gitattributes
+.gitattributes
