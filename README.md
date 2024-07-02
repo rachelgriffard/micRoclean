@@ -104,16 +104,19 @@ Optionally, users can input their results list object from pipeline2 into the *v
 visualize_pipeline(pipeline_2_results,
                    interactive = FALSE)
 ```
-![VennExample](https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963)
+
+<img src = "https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963">
 
 ### Filtering loss (FL)
-First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one, indicating low to high contribution respectively from the removed features to the total convariance structure. High values indicate a sign of overfiltering.
+First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one, indicating low to high contribution respectively from the removed reads to the total convariance structure. As the filtering loss value gets closer to one, users should be concerned about potential overfiltering.
 
-Filtering loss for J removal is defined as:
+Filtering loss for removal of reads $J$ is defined as
 
-$$FL(J) = 1 - \frac{\|X^T_{-J} X_{-J}\|_F^2}{\|X^TX\|_F^2}$$
+$$FL(J) = 1 - \frac{\|\|X^T_{-J} X_{-J}\|\|_F^2}{\|\|X^TX\||\_F^2}$$
 
-For more information, users are suggested to read the methods section 2.1 of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
+where the filtering loss represents a ratio of the unfiltered and filtered covariance matrices.
+
+For more detailed information, users are suggested to read the methods section 2.1 of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
 
 ## References
 Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. [https://doi.org/10.1038/s41587-023-01696-w](https://doi.org/10.1038/s41587-023-01696-w) 
