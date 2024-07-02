@@ -71,7 +71,7 @@ FL = function(counts, new_counts = NULL, removed = NULL){
     X_R = counts[,-Ind]
   }
 
-  else {
+  if (is.null(removed)==FALSE & is.null(new_counts)==FALSE) {
     warning('Ensure the correct new_counts or removed values are input for this method')
   }
 

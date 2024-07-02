@@ -22,7 +22,7 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   }
 
   # check to ensure each batch contains some controls
-  for(b in batch) {
+  for(b in meta$batch) {
     index = meta %>% filter(batch == b) %>% row.names() # select within batch
 
     if (sum(meta[index, 'is_control']==TRUE) == 0) {
@@ -48,7 +48,11 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
   sc_counts = do.call(rbind, sc_outs) # append batches back together
 
   # Identify filtering loss
-  sc_FL = FL(counts, new_counts = sc_counts)
+    # remove row of blank sample from counts for FL comparison
+  bl = rownames(meta)[meta$is_control==TRUE]
+  counts_nobl = counts[-c(rownames(counts)==bl),]
+
+  sc_FL = FL(counts_nobl, new_counts = sc_counts)
 
 
   # Create deliverable
