@@ -1,6 +1,6 @@
 # **micRoclean**: Decontamination for low-biomass metagenomic data
 
-<img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/micRoclean.svg" height = "200" align = "right">
+<img src="https://github.com/rachelgriffard/micRoclean/blob/main/images/micRoclean.svg" height = "200" align = "right">
 
 micRoclean contains two pipelines aimed at decontaminating low-biomass microbiome data.
 
@@ -21,7 +21,7 @@ The latest micRoclean release is available for download from the [repository](ht
 
 **Please download the [vignette file](https://github.com/rachelgriffard/micRoclean/blob/main/images/vignette.html) file in this repository for a detailed run through of this package functionality.**
 
-<img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/FlowChart.png" width = "1000" align = "center">
+<img src="https://github.com/rachelgriffard/micRoclean/assets/95938614/7551b458-067b-4d33-b605-f4b3a23c0074" width = "1000" align = "center">
 
 ### micRoclean input
 
