@@ -17,6 +17,10 @@
 
 pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
 
+  if (sum(colnames(meta) %in% 'batch')==0) {
+    meta$batch = rep('a')
+  }
+
   # check to ensure each batch contains some controls
   for(b in batch) {
     index = meta %>% filter(batch == b) %>% row.names() # select within batch
