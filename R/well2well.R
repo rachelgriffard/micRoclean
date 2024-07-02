@@ -4,8 +4,7 @@
 #' @usage Determine the potential impact of spatial well to well relationships
 #'
 #' @import dplyr
-#' @importFrom SCRuB SCRuB
-#' @importFrom vegan vegdist mantel
+#' @import SCRuB
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name
