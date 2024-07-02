@@ -6,7 +6,7 @@ micRoclean contains two pipelines aimed at decontaminating low-biomass microbiom
 
 **For questions on installation or usage, please submit an issue or discussion via GitHub.**
 
-Please **download** the [vignette file](https://github.com/rachelgriffard/micRoclean/blob/main/vignette.html) file in this repository for a detailed run through of this package functionality.
+Please **download** the [vignette file](https://github.com/rachelgriffard/micRoclean/blob/main/images/vignette.html) file in this repository for a detailed run through of this package functionality.
 
 ## Installation
 To install the micRoclean package, users should use the *install_github* function from the **devtools** package. The full command is as follows:
@@ -19,7 +19,7 @@ The latest micRoclean release is available for download from the [repository](ht
 
 ## Usage
 
-**Please download the [vignette file](https://github.com/rachelgriffard/micRoclean/blob/main/vignette.html) file in this repository for a detailed run through of this package functionality.**
+**Please download the [vignette file](https://github.com/rachelgriffard/micRoclean/blob/main/images/vignette.html) file in this repository for a detailed run through of this package functionality.**
 
 <img src="https://github.com/rachelgriffard/micRoclean_development/blob/main/FlowChart.png" width = "1000" align = "center">
 
