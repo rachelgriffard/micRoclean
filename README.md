@@ -2,7 +2,7 @@
 
 <img src="https://github.com/rachelgriffard/micRoclean/blob/main/images/micRoclean.svg" height = "200" align = "right">
 
-micRoclean contains two pipelines aimed at decontaminating low-biomass microbiome data.
+micRoclean contains two pipelines for decontaminating low-biomass microbiome data.
 
 **For questions on installation or usage, please submit an [issue](https://github.com/rachelgriffard/micRoclean/issues) or discussion via GitHub.**
 
