@@ -109,7 +109,7 @@ visualize_pipeline(pipeline_2_results,
                    interactive = FALSE)
 ```
 
-<img src = "https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963">
+<img src = "https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963" align = "center">
 
 ### Filtering loss (FL)
 First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one, indicating low to high contribution respectively from the removed reads to the total convariance structure. As the filtering loss value gets closer to one, users should be concerned about potential overfiltering.
