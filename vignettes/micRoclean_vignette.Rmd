@@ -28,13 +28,13 @@ First, we need to load the *micRoclean* package as well as a few others.
 ```{r library, silent = TRUE}
 library(micRoclean)
 
-library(tidyverse) # for %>%
-library(knitr) # for kable
+library(tidyverse) # %>%
+library(knitr) # kable
 ```
 
 ## Data import
 
-Next, we are going to load our count and metadata matrix.
+Next, we are going to load our count and metadata matrix. These come from a mock dilution series from Hulspusch et al. (2023) and the original data can be found [here](https://github.com/lakarstens/ControllingContaminants16S/tree/master/Analyses). Users can see how counts and metadata were create through the R file [here](https://github.com/rachelgriffard/micRoclean/tree/main/vignettes/original_data_structure).
 
 ### Counts matrix
 
@@ -45,7 +45,7 @@ counts = read.csv('counts.csv', row.names = 1)
 head(counts) %>% kable()
 ```
 
-### Metadata matrix
+### Metadata
 
 The *metadata* is a matrix with samples (n) as rows and two required columns *is_control* and *sample_type*. Two optional columns can be included named *batch* and *sample_well*. It is important that the naming scheme of the columns for the metadata match as seen below.
 
@@ -62,15 +62,23 @@ metadata = read.csv('meta.csv', row.names = 1)
 head(metadata) %>% kable()
 ```
 
-### Known contaminants
+### Mock taxa
 
-As this data is from an even mock dataset (Hulspusch et al., 2023), we have the known contaminants available to us.
-
+We can import information about each of the mock taxa for implementing pipeline 2 step 4.
 ```{r}
-mock_taxa = read.csv('mockTaxa.csv')
+mock_taxa = read.csv('mockTaxa.csv', row.names = 1)
 mock_taxa %>% kable()
 ```
 
+### Known contaminants
+
+As this data is from an even mock dataset (Hulspusch et al., 2023), we are able to see only the expected sequences from the undiluted mock microbial sample (D0).
+```{r}
+expected_D0 = read.csv('expectedD0.csv', row.names = 1)
+expected_D0 %>% kable()
+```
+
+We can use each of these to see how the methods are performing.
 
 # Pipelines
 
