@@ -4,7 +4,7 @@
 
 micRoclean contains two pipelines for decontaminating low-biomass microbiome data.
 
-**For questions on installation or usage, please submit an [issue](https://github.com/rachelgriffard/micRoclean/issues) or discussion via GitHub.**
+**For questions on installation or usage, please submit an [issue](https://github.com/rachelgriffard/micRoclean/issues) or [discussion](https://github.com/rachelgriffard/micRoclean/discussions) via GitHub.**
 
 Please **download** the [vignette file](https://github.com/rachelgriffard/micRoclean/tree/main/vignettes) file in this repository for a detailed run through of this package functionality.
 
