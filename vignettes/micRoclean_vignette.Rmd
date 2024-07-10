@@ -181,7 +181,7 @@ Filtering loss for removal of reads $J$ is defined as
 
 $$FL(J) = 1 - \frac{\|Y^T Y\|_F^2}{\|X^TX\|F^2}$$
 
-where the filtering loss represents a ratio of the unfiltered and filtered covariance matrices.
+where the filtering loss represents a ratio of the unfiltered ($X$) and filtered ($Y$) covariance matrices.
 
 In our example for pipeline1, we see that the filtering loss is:
 
