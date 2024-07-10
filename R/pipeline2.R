@@ -20,6 +20,11 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
 
   set.seed(seed)
 
+  # Step 0: Check if there is multiple batches
+  if (unique(meta$batch)<2) {
+    stop('Only one batch detected. Use pipeline1.')
+  }
+
   # Step 0: W2W check
   well2well(counts, meta, seed = seed)
 
