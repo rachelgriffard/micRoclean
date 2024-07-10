@@ -38,12 +38,21 @@ Next, we are going to load our count and metadata matrix. These come from a mock
 
 ### Counts matrix
 
-The *count matrix* is A samples (n) by features (p) matrix.
+The *count matrix* is A samples (n) by features (p) matrix.  
 
-```{r import counts}
-counts = read.csv('counts.csv', row.names = 1)
-head(counts) %>% kable()
+The following is the count matrix for pipeline 1.
+
+```{r import counts_1}
+counts_1 = read.csv('counts_pipeline1.csv', row.names = 1)
+head(counts_1) %>% kable()
 ```
+
+The following is the counts matrix for pipeline 2.
+```{r}
+counts_2 = read.csv('counts_pipeline2.csv', row.names = 1)
+head(counts_2) %>% kable()
+```
+
 
 ### Metadata
 
@@ -57,28 +66,22 @@ The *metadata* is a matrix with samples (n) as rows and two required columns *is
 
 -   (optional) *sample_well* - String that indicates the well location of the sample. Must be in LETTER-NUMBER format, e.g. A1.
 
+The following is the metadata for pipeline 1.
+
 ```{r}
-metadata = read.csv('meta.csv', row.names = 1)
-head(metadata) %>% kable()
+metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
+head(metadata_1) %>% kable()
 ```
 
-### Mock taxa
+The following is the metadata for pipeline 2.
 
-We can import information about each of the mock taxa for implementing pipeline 2 step 4.
 ```{r}
-mock_taxa = read.csv('mockTaxa.csv', row.names = 1)
-mock_taxa %>% kable()
+metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
+head(metadata_2) %>% kable()
 ```
 
-### Known contaminants
 
-As this data is from an even mock dataset (Hulspusch et al., 2023), we are able to see only the expected sequences from the undiluted mock microbial sample (D0).
-```{r}
-expected_D0 = read.csv('expectedD0.csv', row.names = 1)
-expected_D0 %>% kable()
-```
-
-We can use each of these to see how the methods are performing.
+We can use these data to see how our pipelines work.
 
 # Pipelines
 
@@ -90,15 +93,15 @@ This pipeline should be used when the user:
 
 2.  Wants to primarily characterize the original composition of the sample prior to contamination
 
-3.  Has only one batch
+3.  Has only one batch, or has multiple batches if negative controls are present in each
 
 Furthermore, users must have control samples present in each batch for this method to be used.
 
 This pipeline implements the [SCRuB method](https://www.nature.com/articles/s41587-023-01696-w) for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 
 ```{r}
-pipeline_1_results = pipeline1(counts = counts,
-                               meta = metadata)
+pipeline_1_results = pipeline1(counts = counts_1,
+                               meta = metadata_1)
 ```
 
 Once run, the pipeline will return a list object with:
@@ -120,7 +123,8 @@ Pipeline 2 contains multiple steps to identify potential contaminants, as visual
 To run this pipeline, first the user must input a list of known contaminants as a "blocklist" and identify the corresponding technical replicates across batches as such:
 
 ```{r}
-blocklist = c('Actinomyces','Corynebacterium','Arthrobacter',
+# blocklist
+bl = c('Actinomyces','Corynebacterium','Arthrobacter',
               'Rothia','Propionibacterium','Atopobium',
               'Sediminibacterium','Porphyromonas','Prevotella',
               'Chryseobacterium','Capnocytophaga','Chryseobacterium',
@@ -128,14 +132,18 @@ blocklist = c('Actinomyces','Corynebacterium','Arthrobacter',
               'Bacillus','Geobacillus','Brevibacillus','Paenibacillus',
               'Staphylococcus','Abiotrophia','Granulicatella',
               'Enterococcus','Lactobacillus','Streptococcus')
-technical_replicates = c()
+bl %>% kable()
+
+# technical replicates
+tr = c()
+tr %>% kable()
 ```
 
 Then the user can input their data as such:
 
 ```{r}
-pipeline_2_results = pipeline2(counts = counts,
-                               meta = metadata,
+pipeline_2_results = pipeline2(counts = counts_2,
+                               meta = metadata_2,
                                blocklist = bl,
                                technical_replicates = tr,
                                remove_if = 1, #optional
@@ -171,7 +179,7 @@ First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, 
 
 Filtering loss for removal of reads $J$ is defined as
 
-$$FL(J) = 1 - \frac{\|X^T_{-J} X_{-J}\|_F^2}{\|X^TX\|F^2}$$
+$$FL(J) = 1 - \frac{\|Y^T Y\|_F^2}{\|X^TX\|F^2}$$
 
 where the filtering loss represents a ratio of the unfiltered and filtered covariance matrices.
 
