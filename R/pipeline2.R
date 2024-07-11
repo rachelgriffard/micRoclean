@@ -4,6 +4,8 @@
 #'
 #' @family pipeline2
 #'
+#' @import DescTools
+#'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta dataframe with columns is_control, sample_type
 #' @param blocklist Vector of known previously identified contaminant features
