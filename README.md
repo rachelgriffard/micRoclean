@@ -47,12 +47,12 @@ head(metadata)
 ```
 | | is_control | sample_type | batch | sample_well |
 | :-------------: | ------------- |------------- |------------- |------------- |
-| Sample_1  |  FALSE | plasma_1 | A| A2|
-| Sample_2  |  FALSE | plasma_1 | B| A4|
+| Sample_1  |  FALSE | plasma | A| A2|
+| Sample_2  |  FALSE | plasma | B| A4|
 | Sample_3  |  TRUE | DNA extraction control | B| B3| 
-| Sample_4  |  FALSE | plasma_2 | A| B1|
+| Sample_4  |  FALSE | plasma | A| B1|
 | Sample_5  |  TRUE | DNA extraction control | B| B4|
-| Sample_6  |  FALSE | plasma_2 | B| C12|
+| Sample_6  |  FALSE | plasma | B| C12|
 
 ### Pipeline 1
 This pipeline should be used when the user:
