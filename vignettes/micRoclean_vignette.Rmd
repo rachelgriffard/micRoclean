@@ -179,7 +179,7 @@ First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, 
 
 Filtering loss for removal of reads $J$ is defined as
 
-$$FL(J) = 1 - \frac{\|Y^T Y\|_F^2}{\|X^TX\|F^2}$$
+$$FL(J) = 1 - \frac{\|Y^T Y\|_F^2}{\|X^TX\|_F^2}$$
 
 where the filtering loss represents a ratio of the unfiltered ($X$) and filtered ($Y$) covariance matrices.
 
