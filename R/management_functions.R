@@ -53,27 +53,9 @@ wrap_phyloseq = function(counts, meta) {
 #' @return Data frame with features as row names and associated filtering loss value
 #' @export
 
-FL = function(counts, new_counts = NULL, removed = NULL){
+FL = function(counts, new_counts = NULL){
 
-  # for pipeline 1
-  if (is.null(new_counts) == FALSE) { #pipeline 1
-    X_R = new_counts
-  }
-
-  # for pipeline 2
-  if (is.null(removed) == FALSE) {
-
-    # Check the format of removed vector
-    if(class(removed) != "character")
-      stop('removed argument must be a character vector containing names of taxa to be removed')
-
-    Ind = which(colnames(counts) %in%  removed)
-    X_R = counts[,-Ind]
-  }
-
-  if (is.null(removed)==FALSE & is.null(new_counts)==FALSE) {
-    warning('Ensure the correct new_counts or removed values are input for this method')
-  }
+  X_R = new_counts
 
   #calculate corresponding norm
   Netw = t(as.matrix(counts))%*%as.matrix(counts)

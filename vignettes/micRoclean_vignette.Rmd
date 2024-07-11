@@ -19,7 +19,10 @@ knitr::opts_chunk$set(
 
 micRoclean contains two pipelines for decontaminating low-biomass microbiome data.
 
-For questions on installation or usage, please submit an issue or discussion via [GitHub](https://github.com/rachelgriffard/micRoclean/issues).
+For questions on installation or usage, please submit an issue or discussion via [GitHub](https://github.com/rachelgriffard/micRoclean/issues).  
+
+To run this vignette, it is suggested to download the whole "vignettes" file folder and set working directory to file location by choosing:  
+**Session > Set working directory > To source file location**
 
 ## Package loading
 
@@ -30,6 +33,7 @@ library(micRoclean)
 
 library(tidyverse) # %>%
 library(knitr) # kable
+library(kableExtra) # scrollbox
 ```
 
 ## Data import
@@ -44,13 +48,18 @@ The following is the count matrix for pipeline 1.
 
 ```{r import counts_1}
 counts_1 = read.csv('counts_pipeline1.csv', row.names = 1)
-head(counts_1) %>% kable()
+counts_1 %>% kable()  %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
 ```
 
 The following is the counts matrix for pipeline 2.
+
 ```{r}
 counts_2 = read.csv('counts_pipeline2.csv', row.names = 1)
-head(counts_2) %>% kable()
+counts_2 %>% kable() %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
 ```
 
 
@@ -70,14 +79,18 @@ The following is the metadata for pipeline 1.
 
 ```{r}
 metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
-head(metadata_1) %>% kable()
+metadata_1 %>% kable()  %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
 ```
 
 The following is the metadata for pipeline 2.
 
 ```{r}
 metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
-head(metadata_2) %>% kable()
+metadata_2 %>% kable() %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
 ```
 
 
@@ -108,7 +121,19 @@ Once run, the pipeline will return a list object with:
 
 1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (p) matrix with the decontaminated counts
 
-2.  *Filtering loss value (FL)* - A numeric value between 0 and 1
+```{r}
+pipeline_1_results$decontaminated_count %>% kable()  %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
+```
+
+
+2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
+
+```{r}
+pipeline_1_results$filtering_loss
+```
+
 
 Other notes:
 
@@ -120,23 +145,59 @@ This pipeline should be used when the user: 1. Wants to primarily identify poten
 
 Pipeline 2 contains multiple steps to identify potential contaminants, as visualized here: <img src="https://github.com/rachelgriffard/micRoclean/assets/95938614/f7c3290e-026a-4d53-9939-e737ea400da1" align="center" height="400"/>
 
-To run this pipeline, first the user must input a list of known contaminants as a "blocklist" and identify the corresponding technical replicates across batches as such:
+To run this pipeline, first the user must input a list of known contaminants as a "blocklist":
 
 ```{r}
 # blocklist
 bl = c('Actinomyces','Corynebacterium','Arthrobacter',
-              'Rothia','Propionibacterium','Atopobium',
-              'Sediminibacterium','Porphyromonas','Prevotella',
-              'Chryseobacterium','Capnocytophaga','Chryseobacterium',
-              'Flavobacterium','Pedobacter','UnclassifiedTM7',
-              'Bacillus','Geobacillus','Brevibacillus','Paenibacillus',
-              'Staphylococcus','Abiotrophia','Granulicatella',
-              'Enterococcus','Lactobacillus','Streptococcus')
-bl %>% kable()
+       'Rothia','Propionibacterium','Atopobium',
+       'Sediminibacterium','Porphyromonas','Prevotella',
+       'Chryseobacterium','Capnocytophaga','Chryseobacterium',
+       'Flavobacterium','Pedobacter','UnclassifiedTM7',
+       'Bacillus','Geobacillus','Brevibacillus','Paenibacillus',
+       'Staphylococcus','Abiotrophia','Granulicatella',
+       'Enterococcus','Lactobacillus','Streptococcus',
+       'Clostridium','Coprococcus','Anaerococcus','Dialister','Megasphaera',
+       'Veillonella','Fusobacterium','Leptotrichia','Brevundimonas','Afipia',
+       'Bradyrhizobium','Devosia','Methylobacterium','Mesorhizobium','Phyllobacterium',
+       'Rhizobium','Methylobacterium','Phyllobacterium','Roseomonas','Novosphingobium	',
+       'Sphingobium','Sphingomonas','Achromobacter','Burkholderia','Acidovorax',
+       'Comamonas','Curvibacter','Pelomonas','Cupriavidus','Duganella',
+       'Herbaspirillum','Janthinobacterium','Massilia','Oxalobacter','Ralstonia',
+       'Leptothrix','kingella','Neisseria','Escherichia','Haemophilus',
+       'Acinetobacter','Enhydrobacter','Pseudomonas','Stenotrophomonas','Xanthomonas')
+bl %>% kable() %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
+```
 
+The blocklist used above is directly from the publicly available blocklist in the study by [Eisenhofer et al. (2019)](https://www.sciencedirect.com/science/article/pii/S0966842X18302531?via%3Dihub) which is suggested for use if the users do not have their own blocklist.  
+
+Next, the user must specify technical replicates across batches using sample names and columns for each batch as such:  
+
+```{r}
 # technical replicates
-tr = c()
-tr %>% kable()
+tr = data.frame('F' = c("037_25_10_17_KIT1","049_16_11_16_KIT1","050_19_06_15_KIT1",
+               "060_09_06_15_KIT1","075_23_06_15_KIT1","079_22_06_15_KIT1",
+               "094_05_06_15_KIT1","103_30_05_17_KIT1","109_26_05_17_KIT1",
+               "117_19_06_15_KIT1","128_18_11_16_KIT1","137_30_05_17_KIT1",
+               "138_17_11_16_KIT1","139_25_10_17_KIT1","159_23_05_17_KIT1",
+               "PM00995_KIT1","PM01011_KIT1","PM01016_KIT1","PM01043_KIT1",     
+               "PM01054_KIT1","PM01057_KIT1","PM01060_KIT1","PM01064_KIT1",     
+               "PM01070_KIT1","PM01074_KIT1","PM01075_KIT1","PM01087_KIT1",   
+               "PM01088_KIT1","PM01093_KIT1","PM1009_KIT1"),
+       'G' = c("037_25_10_17_KIT2","049_16_11_16_KIT2","050_19_06_15_KIT2",
+               "060_09_06_15_KIT2","075_23_06_15_KIT2","079_22_06_15_KIT2",
+               "094_05_06_15_KIT2","103_30_05_17_KIT2","109_26_05_17_KIT2",
+               "117_19_06_15_KIT2","128_18_11_16_KIT2","137_30_05_17_KIT2",
+               "138_17_11_16_KIT2","139_25_10_17_KIT2","159_23_05_17_KIT2",
+               "PM00995_KIT2","PM01011_KIT2","PM01016_KIT2",    
+               "PM01043_KIT2","PM01054_KIT2","PM01057_KIT2","PM01060_KIT2",
+               "PM01064_KIT2","PM01070_KIT2","PM01074_KIT2","PM01075_KIT2",
+               "PM01087_KIT2","PM01088_KIT2","PM01093_KIT2","PM1009_KIT2"))
+tr %>% kable() %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
 ```
 
 Then the user can input their data as such:
@@ -160,7 +221,7 @@ Once run, the pipeline will return a list object with:
 
 1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by non-contaminant features (p - c) matrix with the decontaminated counts
 
-2.  *Filtering loss value (FL)* - A numeric value between 0 and 1
+2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
 
 3.  *Contaminant ID (contaminant_id)* - Dataframe with features (p) by removal steps and boolean value indicating TRUE if tagged as contaminant in that step, FALSE otherwise.
 
@@ -198,5 +259,7 @@ For more detailed information, users are suggested to read the methods section 2
 Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B. A., Morowitz, M. J., Banfield, J. F., Christiano, A. M., Pe'er, I., Uhlemann, A. C., Shenhav, L., & Korem, T. (2023). Contamination source modeling with SCRuB improves cancer phenotype prediction from microbiome data. Nature biotechnology, 41(12), 1820–1828. <https://doi.org/10.1038/s41587-023-01696-w>
 
 Davis, N.M., Proctor, D.M., Holmes, S.P. et al. Simple statistical identification and removal of contaminant sequences in marker-gene and metagenomics data. Microbiome 6, 226 (2018). <https://doi.org/10.1186/s40168-018-0605-2>
+
+Eisenhofer, R., Minich, J. J., Marotz, C., Cooper, A., Knight, R., & Weyrich, L. S. (2019). Contamination in Low Microbial Biomass Microbiome Studies: Issues and Recommendations. Trends in microbiology, 27(2), 105–117. <https://doi.org/10.1016/j.tim.2018.11.003>  
 
 Smirnova, E., Huzurbazar, S., & Jafari, F. (2019). PERFect: PERmutation Filtering test for microbiome data. Biostatistics (Oxford, England), 20(4), 615–631. <https://doi.org/10.1093/biostatistics/kxy020>
