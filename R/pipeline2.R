@@ -40,7 +40,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
 
   # Step 3: Remove if DA in diff batches for technical replicates
 
-  s3_res = step3(counts, technical_replicates)
+  s3_res = step3(counts, meta, technical_replicates)
 
   # Step 4: Remove known 'blocklist' of contaminants
 
@@ -167,7 +167,7 @@ step2 = function(counts, meta, threshold) {
 #' @return Vector of features tagged as contaminants
 #' @export
 
-step3 = function(counts, technical_replicates) {
+step3 = function(counts, meta, technical_replicates) {
 
   # wrap dataframe for technical replicates in each batch ordered by match (line ~336 original_pipeline2.R)
   count_replicate = list()
