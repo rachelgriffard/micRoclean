@@ -235,5 +235,5 @@ step4 = function(counts, blocklist) {
     blocklist = paste0(blocklist, '%')
   }
 
-  return(allTaxa[(allTaxa %like any% blocklist)])
+  return(allTaxa[(tolower(allTaxa) %like any% tolower(blocklist))])
 }
