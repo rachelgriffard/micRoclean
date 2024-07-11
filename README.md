@@ -103,6 +103,27 @@ Once run, the pipeline will return a list object with:
 3. *Contaminant ID (contaminant_id)* - Dataframe with features (p) by removal steps and boolean value indicating TRUE if tagged as contaminant in that step, FALSE otherwise.
 4. *Removed (removed)* - Character vector of all samples tagged as contaminants and removed from the decontaminated count matrix
 
+For convenience, the default blocklist from [Eisenhofer et al. (2019)](https://www.sciencedirect.com/science/article/pii/S0966842X18302531?via%3Dihub) is included below and can be copied, if desired:
+```
+bl = c('Actinomyces','Corynebacterium','Arthrobacter',
+       'Rothia','Propionibacterium','Atopobium',
+       'Sediminibacterium','Porphyromonas','Prevotella',
+       'Chryseobacterium','Capnocytophaga','Chryseobacterium',
+       'Flavobacterium','Pedobacter','UnclassifiedTM7',
+       'Bacillus','Geobacillus','Brevibacillus','Paenibacillus',
+       'Staphylococcus','Abiotrophia','Granulicatella',
+       'Enterococcus','Lactobacillus','Streptococcus',
+       'Clostridium','Coprococcus','Anaerococcus','Dialister','Megasphaera',
+       'Veillonella','Fusobacterium','Leptotrichia','Brevundimonas','Afipia',
+       'Bradyrhizobium','Devosia','Methylobacterium','Mesorhizobium','Phyllobacterium',
+       'Rhizobium','Methylobacterium','Phyllobacterium','Roseomonas','Novosphingobium	',
+       'Sphingobium','Sphingomonas','Achromobacter','Burkholderia','Acidovorax',
+       'Comamonas','Curvibacter','Pelomonas','Cupriavidus','Duganella',
+       'Herbaspirillum','Janthinobacterium','Massilia','Oxalobacter','Ralstonia',
+       'Leptothrix','kingella','Neisseria','Escherichia','Haemophilus',
+       'Acinetobacter','Enhydrobacter','Pseudomonas','Stenotrophomonas','Xanthomonas')
+```
+
 Optionally, users can input their results list object from pipeline2 into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization is interactive.
 ```
 visualize_pipeline(pipeline_2_results,
