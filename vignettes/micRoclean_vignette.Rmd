@@ -221,7 +221,17 @@ Once run, the pipeline will return a list object with:
 
 1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by non-contaminant features (p - c) matrix with the decontaminated counts
 
+```{r}
+pipeline_2_results$decontaminated_count %>% kable()  %>%
+  kable_styling("striped", full_width = T) %>% 
+ scroll_box(width = '100%', height = "300px")
+```
+
 2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
+
+```{r}
+pipeline_2_results$filtering_loss
+```
 
 3.  *Contaminant ID (contaminant_id)* - Dataframe with features (p) by removal steps and boolean value indicating TRUE if tagged as contaminant in that step, FALSE otherwise.
 

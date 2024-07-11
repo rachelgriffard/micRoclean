@@ -2,6 +2,8 @@
 
 #' Visualize results from the pipelines within the package
 #'
+#' @import ggVennDiagram
+#'
 #' @param pipeline_output Output of pipeline object
 #' @param interactive TRUE if user wants interactive plot output
 #' @return Visualizations relating to pipeline object
