@@ -149,3 +149,5 @@ Austin, G. I., Park, H., Meydan, Y., Seeram, D., Sezin, T., Lou, Y. C., Firek, B
 Davis, N.M., Proctor, D.M., Holmes, S.P. et al. Simple statistical identification and removal of contaminant sequences in marker-gene and metagenomics data. Microbiome 6, 226 (2018). [https://doi.org/10.1186/s40168-018-0605-2](https://doi.org/10.1186/s40168-018-0605-2)
 
 Smirnova, E., Huzurbazar, S., & Jafari, F. (2019). PERFect: PERmutation Filtering test for microbiome data. Biostatistics (Oxford, England), 20(4), 615–631. [https://doi.org/10.1093/biostatistics/kxy020](https://doi.org/10.1093/biostatistics/kxy020)
+
+Zozaya-Valdés, E., Wong, S. Q., Raleigh, J., Hatzimihalis, A., Ftouni, S., Papenfuss, A. T., Sandhu, S., Dawson, M. A., & Dawson, S. J. (2021). Detection of cell-free microbial DNA using a contaminant-controlled analysis framework. Genome biology, 22(1), 187. <https://doi.org/10.1186/s13059-021-02401-3>
