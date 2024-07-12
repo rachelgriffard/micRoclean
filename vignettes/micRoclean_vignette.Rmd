@@ -2,14 +2,15 @@
 title: "micRoclean: Decontamination for low-biomass microbiome data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{micRoclean_vignette}
+  %\VignetteIndexEntry{micRoclean: Decontamination for low-biomass microbiome data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE
+  collapse = TRUE,
+  cache = TRUE
 )
 ```
 
@@ -46,7 +47,7 @@ The *count matrix* is A samples (n) by features (p) matrix.
 
 The following is the count matrix for pipeline 1.
 
-```{r import counts_1}
+```{r import-counts-1}
 counts_1 = read.csv('counts_pipeline1.csv', row.names = 1)
 counts_1 %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
@@ -55,7 +56,7 @@ counts_1 %>% kable()  %>%
 
 The following is the counts matrix for pipeline 2.
 
-```{r}
+```{r import-counts-2}
 counts_2 = read.csv('counts_pipeline2.csv', row.names = 1)
 counts_2 %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
@@ -77,7 +78,7 @@ The *metadata* is a matrix with samples (n) as rows and two required columns *is
 
 The following is the metadata for pipeline 1.
 
-```{r}
+```{r import-meta-1}
 metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
 metadata_1 %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
@@ -86,7 +87,7 @@ metadata_1 %>% kable()  %>%
 
 The following is the metadata for pipeline 2.
 
-```{r}
+```{r import-meta2}
 metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
 metadata_2 %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
@@ -112,7 +113,7 @@ Furthermore, users must have control samples present in each batch for this meth
 
 This pipeline implements the [SCRuB method](https://www.nature.com/articles/s41587-023-01696-w) for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 
-```{r}
+```{r pipeline1}
 pipeline_1_results = pipeline1(counts = counts_1,
                                meta = metadata_1)
 ```
@@ -121,7 +122,7 @@ Once run, the pipeline will return a list object with:
 
 1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (p) matrix with the decontaminated counts
 
-```{r}
+```{r p1-decount}
 pipeline_1_results$decontaminated_count %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -130,7 +131,7 @@ pipeline_1_results$decontaminated_count %>% kable()  %>%
 
 2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
 
-```{r}
+```{r p1-fl}
 pipeline_1_results$filtering_loss
 ```
 
@@ -147,7 +148,7 @@ Pipeline 2 contains multiple steps to identify potential contaminants, as visual
 
 To run this pipeline, first the user must input a list of known contaminants as a "blocklist":
 
-```{r}
+```{r blocklist}
 # blocklist
 bl = c('Actinomyces','Corynebacterium','Arthrobacter',
        'Rothia','Propionibacterium','Atopobium',
@@ -175,7 +176,7 @@ The blocklist used above is directly from the publicly available blocklist in th
 
 Next, the user must specify technical replicates across batches using sample names and columns for each batch as such:  
 
-```{r}
+```{r tech-repl}
 # technical replicates
 tr = data.frame('F' = c("037_25_10_17_KIT1","049_16_11_16_KIT1","050_19_06_15_KIT1",
                "060_09_06_15_KIT1","075_23_06_15_KIT1","079_22_06_15_KIT1",
@@ -202,7 +203,7 @@ tr %>% kable() %>%
 
 Then the user can input their data as such:
 
-```{r}
+```{r pipeline2}
 pipeline_2_results = pipeline2(counts = counts_2,
                                meta = metadata_2,
                                blocklist = bl,
@@ -221,7 +222,7 @@ Once run, the pipeline will return a list object with:
 
 1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by non-contaminant features (p - c) matrix with the decontaminated counts
 
-```{r}
+```{r p2-decount}
 pipeline_2_results$decontaminated_count %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -229,7 +230,7 @@ pipeline_2_results$decontaminated_count %>% kable()  %>%
 
 2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
 
-```{r}
+```{r p2-fl}
 pipeline_2_results$filtering_loss
 ```
 
@@ -239,7 +240,7 @@ pipeline_2_results$filtering_loss
 
 Optionally, users can input their results list object from pipeline2 into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization is interactive.
 
-```{r}
+```{r p2-visualize, out.width = "75%"}
 visualize_pipeline(pipeline_2_results,
                    interactive = FALSE)
 ```
@@ -256,8 +257,8 @@ where the filtering loss represents a ratio of the unfiltered ($X$) and filtered
 
 In our example for pipeline1, we see that the filtering loss is:
 
-```{r}
-paste0('Filtering loss: ', round(p1_res$filtering_loss, 4))
+```{r filtering-loss}
+paste0('Filtering loss: ', round(pipeline_1_results$filtering_loss, 4))
 ```
 
 Indicating that there is a low contribution for the removed counts. We do not see evidence of overfiltering using this method.
