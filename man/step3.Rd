@@ -4,14 +4,14 @@
 \alias{step3}
 \title{step3}
 \usage{
-step3(counts, technical_replicates)
+step3(counts, meta, technical_replicates)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
 
-\item{technical_replicates}{Matrix identifying technical replicates across batches with batch as column and rows matching replicates}
-
 \item{meta}{Matrix with columns is_control, sample_type, and batch}
+
+\item{technical_replicates}{Matrix identifying technical replicates across batches with batch as column and rows matching replicates}
 }
 \value{
 Vector of features tagged as contaminants

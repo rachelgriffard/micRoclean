@@ -6,7 +6,7 @@
 Determine the filtering loss (FL) for count
 data based on removed features (adjusted from katiasmirn/PERfect/FL_J.R)}
 \usage{
-FL(counts, new_counts = NULL, removed = NULL)
+FL(counts, new_counts = NULL)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
