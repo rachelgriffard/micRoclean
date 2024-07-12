@@ -1,4 +1,4 @@
-# **micRoclean**: Decontamination for low-biomass microbiome data
+# *micRoclean*: Decontamination for low-biomass microbiome data
 
 <img src="https://github.com/rachelgriffard/micRoclean/blob/main/images/micRoclean.svg" height = "200" align = "right">
 
