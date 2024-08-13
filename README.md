@@ -139,7 +139,7 @@ Filtering loss for removal of reads $J$ is defined as
 
 $$FL(J) = 1 - \frac{\|\|Y^T Y\|\|_F^2}{\|\|X^TX\||\_F^2}$$
 
-where the filtering loss represents a ratio of the unfiltered ($X$) and filtered ($Y$) covariance matrices.
+where the filtering loss represents a ratio of the unfiltered ($X$) and filtered ($Y$) count matrices.
 
 For more detailed information, users are suggested to read the methods section 2.1 of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
 
