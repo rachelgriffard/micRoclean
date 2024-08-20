@@ -8,10 +8,11 @@
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name
+#' @param control_name String indicating name of the control samples. Set to 'Control' if unspecified.
 #' @param seed Random seed
 #' @export
 
-well2well = function(counts, meta, seed = 42) {
+well2well = function(counts, meta, contrl_name, seed = 42) {
   # basic horiz/vert sort for now
   set.seed(seed)
 
@@ -42,10 +43,16 @@ well2well = function(counts, meta, seed = 42) {
   # restart at each batch (different plates)
   num_b = table(meta$batch)
 
-  sample_well = c(vert[1:num_b[1]], vert[1:num_b[2]])
+  sample_well = c()
+  for(b in unique(meta$batch)) {
+    sample_well = c(sample_well, vert[1:num_b[names(num_b) == b]])
+  }
   meta_vert = cbind(meta, sample_well)
 
-  sample_well = c(horiz[1:num_b[1]], horiz[1:num_b[2]])
+  sample_well = c()
+  for(b in unique(meta$batch)) {
+    sample_well = c(sample_well, horiz[1:num_b[names(num_b) == b]])
+  }
   meta_horiz = cbind(meta, sample_well)
 
   # order counts by name convention for SCRuB function
@@ -61,7 +68,7 @@ well2well = function(counts, meta, seed = 42) {
 
     try((sc_outs_vert[[b]] = SCRuB(counts[index,],
                                    meta_vert[index,] %>%
-                                     select(is_control, sample_type, sample_well))$p), silent = TRUE)
+                                     select(is_control, sample_type, sample_well))), silent = TRUE)
   }
 
   sc_outs_horiz = list()
@@ -70,32 +77,24 @@ well2well = function(counts, meta, seed = 42) {
 
     try((sc_outs_horiz[[b]] = SCRuB(counts[index,],
                                     meta_horiz[index,] %>%
-                                      select(is_control, sample_type, sample_well))$p), silent = TRUE)
+                                      select(is_control, sample_type, sample_well))), silent = TRUE)
   }
 
-  sc_outs = list()
-  for(b in unique(meta$batch)) {
-    index = meta %>% filter(batch == b) %>% row.names()
+  # append batches back together
+  SCRuB_vert = c()
+  SCRuB_vert = sapply(sc_outs_vert, function(x) {
+    alpha = x[['inner_iterations']][[control_name]][['alpha']]
+    alpha[,ncol(alpha)]
+  })
 
-    try((sc_outs[[b]] = SCRuB(counts[index,],
-                              meta[index,] %>%
-                                select(is_control, sample_type))$p), silent = TRUE)
-  }
+  SCRuB_horiz = c()
+  SCRuB_horiz = sapply(sc_outs_horiz, function(x) {
+    alpha = x[['inner_iterations']][[control_name]][['alpha']]
+    alpha[,ncol(alpha)]
+  })
 
-  # append batches back together for full, decontaminated dataframe
-  SCRuB_vert = unlist(sc_outs_vert) # append batches back together
+  if(is.null(SCRuB_horiz) | is.null(SCRuB_vert)) {warning('Ensure the string name for control_name is correctly specified.')}
 
-  SCRuB_horiz = unlist(sc_outs_horiz) # append batches back together
-
-  SCRuB = unlist(sc_outs) # append batches back together
-
-
-  # determine if vert/horiz significantly different from without spatial
-  res_vert = irr::icc(as.matrix(cbind(SCRuB_vert, SCRuB)))
-
-  ifelse(res_vert$p<0.01, warning('Strong evidence of well to well contamination. User is encouraged to rerun pipeline1 with well location information.'), NA)
-
-  res_horiz = irr::icc(as.matrix(cbind(SCRuB_horiz, SCRuB)))
-
-  ifelse(res_horiz$p<0.01, warning('Strong evidence of well to well contamination. User is encouraged to rerun pipeline1 with well location information.'), return(paste0('No strong evidence of well to well contamination.')))
+  # return warning if gamma alpha < 0.9
+  if(sum(SCRuB_vert < 0.9 | SCRuB_horiz < 0.9)>0) {warning('Strong evidence of well to well contamination. User is encouraged to rerun pipeline1 with well location information.')}
 }
