@@ -85,12 +85,15 @@ pipeline_2_results = pipeline2(counts = counts,
                                meta = metadata,
                                blocklist = bl,
                                technical_replicates = tr,
+                               control_name = 'Control',
                                remove_if = 1, #optional
                                step2_threshold = 0.5) #optional
 ```
 Where:
 * *blocklist* - character string
 * *technical_replicates* - Data frame indicating pairs of technical replicates across batches by sample name. See example below where Sample 1 and Sample 6 are technical replicates.
+* *control_name* - String name of control in metadata
+* *remove_if* - Number of steps identifying feature as contaminant to remove from final dataframe
 
 | *batch_1* | *batch_2* |
 | ------------- | ------------- |
