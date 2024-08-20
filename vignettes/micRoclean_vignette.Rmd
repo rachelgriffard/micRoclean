@@ -10,9 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  cache = TRUE,
-  warning = FALSE,
-  message = FALSE
+  cache = TRUE
 )
 ```
 
@@ -82,6 +80,10 @@ The following is the metadata for pipeline 1.
 
 ```{r import-meta-1}
 metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
+
+# append batch data
+metadata_1$batch = rep('A')
+
 metadata_1 %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -230,7 +232,7 @@ pipeline_2_results$decontaminated_count %>% kable()  %>%
  scroll_box(width = '100%', height = "300px")
 ```
 
-2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering.
+2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
 
 ```{r p2-fl}
 pipeline_2_results$filtering_loss
