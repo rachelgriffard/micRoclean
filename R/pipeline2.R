@@ -9,7 +9,7 @@
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta dataframe with columns is_control, sample_type
 #' @param blocklist Vector of known previously identified contaminant features
-#' @param control_names Character name of controls within metadata
+#' @param control_name Character name of controls within metadata
 #' @param remove_if Threshold for number of steps feature must be identified as potential contaminant to be removed from final cleaned count matrix. Default set to 1.
 #' @param step2_threshold Threshold value for prevalence method of decontam
 #' @param technical_replicates Vector identifying technical replicates across batches
@@ -18,7 +18,7 @@
 #' and filtering loss (FL) statistic
 #' @export
 
-pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 1,
+pipeline2 = function(counts, meta, blocklist, control_name, technical_replicates, remove_if = 1,
                      step2_threshold = 0.5, seed = 42) {
 
   set.seed(seed)
@@ -29,7 +29,7 @@ pipeline2 = function(counts, meta, blocklist, technical_replicates, remove_if = 
   }
 
   # Step 0: W2W check
-  well2well(counts, meta, control_names = control_names, seed = seed)
+  well2well(counts, meta, control_name = control_name, seed = seed)
 
   # Step 1: Remove features that showed different abundance in different batches
   ## ancombc comparison across batches

@@ -12,7 +12,7 @@
 #' @param seed Random seed
 #' @export
 
-well2well = function(counts, meta, contrl_name, seed = 42) {
+well2well = function(counts, meta, control_name, seed = 42) {
   # basic horiz/vert sort for now
   set.seed(seed)
 
@@ -93,8 +93,8 @@ well2well = function(counts, meta, contrl_name, seed = 42) {
     alpha[,ncol(alpha)]
   })
 
-  if(is.null(SCRuB_horiz) | is.null(SCRuB_vert)) {warning('Ensure the string name for control_name is correctly specified.')}
+  if(is.null(SCRuB_horiz) | is.null(SCRuB_vert)) {stop('Ensure the string name for control_name is correctly specified.')}
 
   # return warning if gamma alpha < 0.9
-  if(sum(SCRuB_vert < 0.9 | SCRuB_horiz < 0.9)>0) {warning('Strong evidence of well to well contamination. User is encouraged to rerun pipeline1 with well location information.')}
+  if(sum(SCRuB_vert < 0.9 | SCRuB_horiz < 0.9)>0) {stop('Strong evidence of well to well contamination. User is encouraged to rerun pipeline1 with well location information.')}
 }
