@@ -21,7 +21,7 @@ The latest micRoclean release is available for download from the [repository](ht
 
 **Please download the [vignette file](https://github.com/rachelgriffard/micRoclean/tree/main/vignettes) file in this repository for a detailed run through of this package functionality.**
 
-<img src="https://github.com/user-attachments/assets/8906d485-2207-4b4f-981a-4dd39483f6ff" width = "1000" align = "center">
+<img src="https://github.com/user-attachments/assets/a78fa445-3c67-42af-a981-0580e636df50" width = "1000" align = "center">
 
 ### micRoclean input
 
