@@ -30,9 +30,11 @@ To run this vignette, it is suggested to download the whole "vignettes" file fol
 First, we need to load the *micRoclean* package as well as a few others.
 
 ```{r library, silent = TRUE}
+# required for analysis
 library(micRoclean)
-
 library(tidyverse) # %>%
+
+# for vignette
 library(knitr) # kable
 library(kableExtra) # scrollbox
 ```
@@ -93,6 +95,7 @@ The following is the metadata for pipeline 2.
 
 ```{r import-meta2}
 metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
+
 metadata_2 %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -211,6 +214,7 @@ Then the user can input their data as such:
 pipeline_2_results = pipeline2(counts = counts_2,
                                meta = metadata_2,
                                blocklist = bl,
+                               control_name = 'DENC',
                                technical_replicates = tr,
                                remove_if = 1, #optional
                                step2_threshold = 0.5) #optional
@@ -220,7 +224,9 @@ Where:
 
 -   *blocklist* - character string
 
--   *technical_replicates* - Data frame indicating pairs of technical replicates across batches by sample name. See example below where Sample 1 and Sample 6 are technical replicates.
+-   *technical_replicates* - Data frame indicating pairs of technical replicates across batches by sample name. See example below where Sample 1 and Sample 6 are technical replicates.  
+
+We can see that in this case, the sample appears to have evidence of high well to well contamination. The function prompts the user to decide whether to continue the run. For this vignette, we choose to continue to use pipeline2.  
 
 Once run, the pipeline will return a list object with:
 
@@ -232,7 +238,7 @@ pipeline_2_results$decontaminated_count %>% kable()  %>%
  scroll_box(width = '100%', height = "300px")
 ```
 
-2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
+2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering.
 
 ```{r p2-fl}
 pipeline_2_results$filtering_loss
