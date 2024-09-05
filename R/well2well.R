@@ -96,5 +96,22 @@ well2well = function(counts, meta, control_name, seed = 42) {
   if(is.null(SCRuB_horiz) | is.null(SCRuB_vert)) {stop('Ensure the string name for control_name is correctly specified.')}
 
   # return warning if gamma alpha < 0.9
-  if(sum(SCRuB_vert < 0.9 | SCRuB_horiz < 0.9)>0) {stop('Strong evidence of well to well contamination. User is encouraged to rerun pipeline1 with well location information.')}
+  if(sum(SCRuB_vert < 0.9 | SCRuB_horiz < 0.9)>0) {
+  repeat{
+      warning('Strong evidence of well to well contamination. User is encouraged to run pipeline1 with well location information.')
+      ui = readline('Would you like to proceed? 1: Yes 2: No \n')
+
+      if (ui == 2) {
+        stop('User is encouraged to run pipeline1 with well location information.')
+      }
+
+      if (ui == 1) {
+        cat('Continuing analysis without well location information...')
+      }
+
+      else {
+        cat('Invalid input. Please enter 1 or 2 \n')
+      }
+    }
+  }
 }
