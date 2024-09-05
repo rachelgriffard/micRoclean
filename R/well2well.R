@@ -99,17 +99,6 @@ well2well = function(counts, meta, control_name, seed = 42) {
 
   if(is.null(SCRuB_horiz) | is.null(SCRuB_vert)) {stop('Ensure the string name for control_name is correctly specified.')}
 
-  is_rmarkdown = function() {
-    # Check if the knitr package is loaded
-    if (requireNamespace("knitr", quietly = TRUE)) {
-      # Use knitr::is_html_output() to determine if we're in an RMarkdown document
-      return(knitr::is_html_output())
-    }
-
-    # If the knitr package is not available, we assume it's not in RMarkdown
-    return(FALSE)
-  }
-
   # return warning if gamma alpha < 0.9
   if(sum(SCRuB_vert < 0.9 | SCRuB_horiz < 0.9)>0) {
   repeat{
