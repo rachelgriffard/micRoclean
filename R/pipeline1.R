@@ -9,13 +9,14 @@
 #'
 #' @param counts Count matrix with samples as rows and features as counts
 #' @param meta Data frame with columns is_control, sample_type, and (optional) sample_well
+#' @param control_name Character name of controls within metadata
 #' @param control_order Vector ordering run of sample_type controls, default NA
 #' @param seed Random seed
 #' @return List object with original matrix, decontaminated matrix, and corresponding
 #' filtering loss (FL) statistics
 #' @export
 
-pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
+pipeline1 = function(counts, meta, control_name, control_order = NA, seed = 42) {
 
   if (sum(colnames(meta) %in% 'batch')==0) {
     meta$batch = rep('a')
