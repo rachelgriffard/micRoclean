@@ -30,9 +30,11 @@ To run this vignette, it is suggested to download the whole "vignettes" file fol
 First, we need to load the *micRoclean* package as well as a few others.
 
 ```{r library, silent = TRUE}
+# required for analysis
 library(micRoclean)
-
 library(tidyverse) # %>%
+
+# for vignette
 library(knitr) # kable
 library(kableExtra) # scrollbox
 ```
@@ -93,6 +95,7 @@ The following is the metadata for pipeline 2.
 
 ```{r import-meta2}
 metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
+
 metadata_2 %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
