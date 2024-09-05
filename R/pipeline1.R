@@ -31,6 +31,10 @@ pipeline1 = function(counts, meta, control_order = NA, seed = 42) {
     }
   }
 
+  if (sum((colnames(meta) %in% 'sample_well'))==0) {
+    well2well(counts, meta, control_name = control_name, seed = seed)
+  }
+
   set.seed(seed)
 
   batch = unique(meta$batch)
