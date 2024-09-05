@@ -135,6 +135,12 @@ visualize_pipeline(pipeline_2_results,
 
 <img src = "https://github.com/rachelgriffard/micRoclean_development/assets/95938614/3f26fedf-47b4-4d1d-bd73-23ca6f32d963" align = "center">
 
+### Well to well contamination (well2well)
+
+Well-to-well leakage is a common contamination where biological samples leak into controls. For batches where users do not have well location information, the well2well function in micRoclean assigns pseudo-locations in a 96-well plate, assuming common order of samples vertically or horizontally. The function then estimates the proportion of each control that originates from a biological sample, indicating well-to-well leakage, through SCRuB package spatial functionality (Austin et al., 2023). If the level of well-to-well contamination is higher than 0.1, the function will return a warning message indicating to the user that they should obtain the well location information for their data and run through pipeline1, which can account for this form of contamination.
+
+For more information about this functionality, users are encouraged to read the well-to-well functionality of the [SCRuB package (Austin et al., 2023](https://www.nature.com/articles/s41587-023-01696-w).
+
 ### Filtering loss (FL)
 First introduced for use in a filtering method PERfect by Smirnova, Huzurbazar, and Jafari (2019), the filtering loss (FL) statistic is implemented in the micRoclean package to quantify the impact due to filtering features out in the above pipelines. The filtering loss value is between zero and one, indicating low to high contribution respectively from the removed reads to the total convariance structure. As the filtering loss value gets closer to one, users should be concerned about potential overfiltering.
 
