@@ -65,7 +65,8 @@ Furthermore, users must have control samples present in each batch for this meth
 This pipeline implements the [SCRuB method](https://www.nature.com/articles/s41587-023-01696-w) for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 ```
 pipeline_1_results = pipeline1(counts = counts,
-                               meta = metadata)
+                               meta = metadata,
+                               control_name = 'Control')
 ```
 Once run, the pipeline will return a list object with:
 1. *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (p) matrix with the decontaminated counts
