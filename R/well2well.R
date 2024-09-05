@@ -109,9 +109,9 @@ well2well = function(counts, meta, control_name, seed = 42) {
         stop('User is encouraged to run pipeline1 with well location information.')
       }
 
-      if (ui == 1) {
+      else if (ui == 1) {
         cat('Continuing analysis without well location information... \n')
-        break
+        return()
       }
 
       else {
