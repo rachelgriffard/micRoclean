@@ -37,7 +37,7 @@ head(counts)
 | Sample_4  |  4 | 5 | 0| 0 |
 | Sample_5  |  0 | 1 | 6| 0 |
 | Sample_6  |  6 | 14 | 21| 2 |
-3. *Metadata* - A metadata matrix with samples (n) as rows and two required columns *is_control* and *sample_type*. Two optional columns can be included named *batch* and *sample_well*. It is important that the naming scheme of the columns for the metadata match as seen below.
+2. *Metadata* - A metadata matrix with samples (n) as rows and two required columns *is_control* and *sample_type*. Two optional columns can be included named *batch* and *sample_well*. It is important that the naming scheme of the columns for the metadata match as seen below.
   * *is_control* - Boolean variable where *TRUE* indicates a extraction negative control sample and *FALSE* otherwise.
   * *sample_type* - Sample types named by string, indicating which samples should be read together.
   * (optional) *batch* - String indicating batch.
