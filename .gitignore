@@ -9,6 +9,8 @@ micRoclean_vignette_cache/
 .Rproj.user
 inst/doc
 .Rbuildignore
+.Rproj
+README.md
 
 # ignore gitattributes
 .gitattributes
