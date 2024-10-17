@@ -55,7 +55,7 @@ pipeline1 = function(counts, meta, control_name, control_order = NA, seed = 42) 
   # Identify filtering loss
     # remove row of blank sample from counts for FL comparison
   bl = rownames(meta)[meta$is_control==TRUE]
-  counts_nobl = counts[-c(rownames(counts)==bl),]
+  counts_nobl = counts[!rownames(counts) %in% bl,]
 
   sc_FL = FL(counts_nobl, new_counts = sc_counts)
 
