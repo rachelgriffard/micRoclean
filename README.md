@@ -25,7 +25,7 @@ The latest micRoclean release is available for download from the [repository](ht
 
 ### micRoclean input
 
-1. *Count matrix* - A samples (n) by features (p) matrix
+1. *Count matrix* - A samples (n) by features (p) matrix generated from 16S-rRNA sequencing data
 ```
 head(counts)
 ```
