@@ -56,8 +56,8 @@ head(metadata)
 
 ### Pipeline 1
 This pipeline should be used when the user:
-1. Has sample well information available
-2. Wants to primarily characterize the original composition of the sample prior to contamination
+1. Has sample well information available and/or
+2. Wants to primarily characterize the original composition of the sample prior to contamination and/or
 3. Has only one batch OR has multiple batches with controls in each batch
 
 Furthermore, users must have control samples present in each batch for this method to be used.
