@@ -17,4 +17,7 @@ VignetteBuilder: knitr
 Imports: 
     dplyr,
     ggplot2,
-    SCRuB
+    SCRuB,
+	ggVennDiagram,
+	ANCOMBC
+Remotes: Shenhav-and-Korem-labs/SCRuB
