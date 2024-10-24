@@ -44,8 +44,8 @@ library(kableExtra) # scrollbox
 Next, we are going to load our count and metadata matrix. These come from a mock dilution series from Hulspusch et al. (2023) and the original data can be found [here](https://github.com/lakarstens/ControllingContaminants16S/tree/master/Analyses). Users can see how counts and metadata were create through the R file [here](https://github.com/rachelgriffard/micRoclean/tree/main/vignettes/original_data_structure).
 
 ```{r}
-load('pipeline1_data.Rdata')
-load('pipeline2_data.Rdata')
+data(pipeline1_data, package = 'micRoclean')
+data(pipeline2_data, package = 'micRoclean')
 ```
 
 
@@ -166,23 +166,27 @@ To run this pipeline, first the user must input a list of known contaminants as 
 
 ```{r blocklist}
 # blocklist
-bl = c('Actinomyces','Corynebacterium','Arthrobacter',
-       'Rothia','Propionibacterium','Atopobium',
-       'Sediminibacterium','Porphyromonas','Prevotella',
-       'Chryseobacterium','Capnocytophaga','Chryseobacterium',
-       'Flavobacterium','Pedobacter','UnclassifiedTM7',
-       'Bacillus','Geobacillus','Brevibacillus','Paenibacillus',
-       'Staphylococcus','Abiotrophia','Granulicatella',
-       'Enterococcus','Lactobacillus','Streptococcus',
-       'Clostridium','Coprococcus','Anaerococcus','Dialister','Megasphaera',
-       'Veillonella','Fusobacterium','Leptotrichia','Brevundimonas','Afipia',
-       'Bradyrhizobium','Devosia','Methylobacterium','Mesorhizobium','Phyllobacterium',
-       'Rhizobium','Methylobacterium','Phyllobacterium','Roseomonas','Novosphingobium	',
-       'Sphingobium','Sphingomonas','Achromobacter','Burkholderia','Acidovorax',
-       'Comamonas','Curvibacter','Pelomonas','Cupriavidus','Duganella',
-       'Herbaspirillum','Janthinobacterium','Massilia','Oxalobacter','Ralstonia',
-       'Leptothrix','kingella','Neisseria','Escherichia','Haemophilus',
-       'Acinetobacter','Enhydrobacter','Pseudomonas','Stenotrophomonas','Xanthomonas')
+data(blocklist, package = 'micRoclean')
+
+# bl = c('Actinomyces','Corynebacterium','Arthrobacter',
+#        'Rothia','Propionibacterium','Atopobium',
+#        'Sediminibacterium','Porphyromonas','Prevotella',
+#        'Chryseobacterium','Capnocytophaga','Chryseobacterium',
+#        'Flavobacterium','Pedobacter','UnclassifiedTM7',
+#        'Bacillus','Geobacillus','Brevibacillus','Paenibacillus',
+#        'Staphylococcus','Abiotrophia','Granulicatella',
+#        'Enterococcus','Lactobacillus','Streptococcus',
+#        'Clostridium','Coprococcus','Anaerococcus','Dialister','Megasphaera',
+#        'Veillonella','Fusobacterium','Leptotrichia','Brevundimonas','Afipia',
+#        'Bradyrhizobium','Devosia','Methylobacterium','Mesorhizobium','Phyllobacterium',
+#        'Rhizobium','Methylobacterium','Phyllobacterium','Roseomonas','Novosphingobium	',
+#        'Sphingobium','Sphingomonas','Achromobacter','Burkholderia','Acidovorax',
+#        'Comamonas','Curvibacter','Pelomonas','Cupriavidus','Duganella',
+#        'Herbaspirillum','Janthinobacterium','Massilia','Oxalobacter','Ralstonia',
+#        'Leptothrix','kingella','Neisseria','Escherichia','Haemophilus',
+#        'Acinetobacter','Enhydrobacter','Pseudomonas','Stenotrophomonas','Xanthomonas')
+
+
 bl %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -235,7 +239,7 @@ When used, this will return a warning indicating that the data has evidence of w
 # for knitting purposes only
 # save(pipeline_2_results, file = 'ignore/pipeline_2_results.RData')
 
-load('pipeline_2_results.RData')
+data(pipeline2_results, package = 'micRoclean')
 ```
 
 
