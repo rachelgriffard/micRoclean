@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r options, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   cache = TRUE
@@ -43,6 +43,12 @@ library(kableExtra) # scrollbox
 
 Next, we are going to load our count and metadata matrix. These come from a mock dilution series from Hulspusch et al. (2023) and the original data can be found [here](https://github.com/lakarstens/ControllingContaminants16S/tree/master/Analyses). Users can see how counts and metadata were create through the R file [here](https://github.com/rachelgriffard/micRoclean/tree/main/vignettes/original_data_structure).
 
+```{r}
+load('pipeline1_data.Rdata')
+load('pipeline2_data.Rdata')
+```
+
+
 ### Counts matrix
 
 The *count matrix* is A samples (n) by features (p) matrix.  
@@ -50,7 +56,8 @@ The *count matrix* is A samples (n) by features (p) matrix.
 The following is the count matrix for pipeline 1.
 
 ```{r import-counts-1}
-counts_1 = read.csv('counts_pipeline1.csv', row.names = 1)
+# counts_1 = read.csv('counts_pipeline1.csv', row.names = 1)
+
 counts_1 %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -59,7 +66,8 @@ counts_1 %>% kable()  %>%
 The following is the counts matrix for pipeline 2.
 
 ```{r import-counts-2}
-counts_2 = read.csv('counts_pipeline2.csv', row.names = 1)
+# counts_2 = read.csv('counts_pipeline2.csv', row.names = 1)
+
 counts_2 %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
@@ -81,7 +89,7 @@ The *metadata* is a matrix with samples (n) as rows and two required columns *is
 The following is the metadata for pipeline 1.
 
 ```{r import-meta-1}
-metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
+# metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
 
 # append batch data
 metadata_1$batch = rep('A')
@@ -94,7 +102,7 @@ metadata_1 %>% kable()  %>%
 The following is the metadata for pipeline 2.
 
 ```{r import-meta2}
-metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
+# metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
 
 metadata_2 %>% kable() %>%
   kable_styling("striped", full_width = T) %>% 
@@ -227,7 +235,7 @@ When used, this will return a warning indicating that the data has evidence of w
 # for knitting purposes only
 # save(pipeline_2_results, file = 'ignore/pipeline_2_results.RData')
 
-load('ignore/pipeline_2_results.RData')
+load('pipeline_2_results.RData')
 ```
 
 
