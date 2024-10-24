@@ -13,9 +13,6 @@ To install the micRoclean package, users should use the *install_github* functio
 ```
 devtools::install_github("rachelgriffard/micRoclean")
 
-# if want to access vignette via vignette(package = 'micRoclean'), use the following command to load
-devtools:install_github("rachelgriffard/micRoclean", build_vignettes = TRUE)
-
 library(micRoclean)
 ```
 
