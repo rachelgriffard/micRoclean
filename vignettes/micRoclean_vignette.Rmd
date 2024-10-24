@@ -194,7 +194,7 @@ bl %>% kable() %>%
 
 The blocklist used above is directly from the publicly available blocklist in the study by [Eisenhofer et al. (2019)](https://www.sciencedirect.com/science/article/pii/S0966842X18302531?via%3Dihub) which is suggested for use if the users do not have their own blocklist.  
 
-Next, the user must specify technical replicates across batches using sample names and columns for each batch as such:  
+Next, the user must specify technical replicates across batches using sample names and columns for each batch. Notice the columns are named based on the metadata, in this case as batches are named 'F' and 'G'.  
 
 ```{r tech-repl}
 # technical replicates
