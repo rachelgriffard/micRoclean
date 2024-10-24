@@ -12,6 +12,10 @@ Please **download** the [vignette file](https://github.com/rachelgriffard/micRoc
 To install the micRoclean package, users should use the *install_github* function from the **devtools** package. The full command is as follows:
 ```
 devtools::install_github("rachelgriffard/micRoclean")
+
+# if want to access vignette via vignette(package = 'micRoclean'), use the following command to load
+devtools:install_github("rachelgriffard/micRoclean", build_vignettes = TRUE)
+
 library(micRoclean)
 ```
 
