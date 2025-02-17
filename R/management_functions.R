@@ -16,12 +16,6 @@
 #' filtering loss (FL) statistics
 #' @export
 
-#' micRoclean
-#'
-#' Primary function for decontamination low biomass microbiome data
-#'
-#' @family management
-
 micRoclean = function(counts, meta, research_goal, control_name, control_order = NA, blocklist, remove_if = 0.5, step2_threshold = 1, technical_replicates, seed = 42) {
   if (research_goal == 'orig.composition') {
      res = pipeline1(counts, meta, control_name, control_order, seed)
@@ -36,6 +30,26 @@ micRoclean = function(counts, meta, research_goal, control_name, control_order =
   else {
     stop(paste0('research_goal must be: biomarker or orig.composition'))
   }
+}
+
+#' unwrap_phyloseq
+#'
+#' Take input phyloseq object and "unwrap" data into matrices expected as input for functions in
+#' micRoclean package.
+#'
+#' @family management
+#'
+#' @import phyloseq
+#' @param phyloseq Phyloseq object to unwrap into required count and meta matrices for pipeline functions
+#' @return List containing counts and metadata data frames for input into pipeline functions
+#' @export
+
+unwrap_phyloseq = function(phyloseq) {
+  counts = data.frame(t(phyloseq@otu_table)) # requires data frame first, will not coerce to matrix from phyloseq object
+  meta = data.frame(phyloseq@sam_data)
+
+  return(list(counts = as.matrix(counts), # adjust to matrix for returnable
+              meta = as.matrix(meta)))
 }
 
 #' wrap_phyloseq
