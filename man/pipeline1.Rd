@@ -4,12 +4,14 @@
 \alias{pipeline1}
 \title{pipeline1}
 \usage{
-pipeline1(counts, meta, control_order = NA, seed = 42)
+pipeline1(counts, meta, control_name, control_order = NA, seed = 42)
 }
 \arguments{
 \item{counts}{Count matrix with samples as rows and features as counts}
 
 \item{meta}{Data frame with columns is_control, sample_type, and (optional) sample_well}
+
+\item{control_name}{Character name of controls within metadata}
 
 \item{control_order}{Vector ordering run of sample_type controls, default NA}
 

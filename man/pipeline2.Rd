@@ -10,6 +10,7 @@ pipeline2(
   counts,
   meta,
   blocklist,
+  control_name,
   technical_replicates,
   remove_if = 1,
   step2_threshold = 0.5,
@@ -22,6 +23,8 @@ pipeline2(
 \item{meta}{dataframe with columns is_control, sample_type}
 
 \item{blocklist}{Vector of known previously identified contaminant features}
+
+\item{control_name}{Character name of controls within metadata}
 
 \item{technical_replicates}{Vector identifying technical replicates across batches}
 

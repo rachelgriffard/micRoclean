@@ -11,6 +11,8 @@ Determine the potential impact of spatial well to well relationships
 
 \item{meta}{Metadata with column one 'is_control' indicating TRUE if control, FALSE if not and 'sample_type' with sample name}
 
+\item{control_name}{String indicating name of the control samples. Set to 'Control' if unspecified.}
+
 \item{seed}{Random seed}
 }
 \description{
