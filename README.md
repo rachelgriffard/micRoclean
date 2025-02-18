@@ -80,7 +80,8 @@ This pipeline should be used when the user:
 2. Does not have sample well information available
 
 The Biomarker Identification Pipeline contains multiple steps to identify potential contaminants, as visualized here:
-<img src = "https://github.com/rachelgriffard/micRoclean/assets/95938614/f7c3290e-026a-4d53-9939-e737ea400da1" align = "center" height = 400>
+
+<img src = "https://github.com/user-attachments/assets/36eda9df-dfc3-4916-8297-d6f7884f6762" align = "center" height = 400>
 
 To run this pipeline, the user can input their data as such:
 ```
