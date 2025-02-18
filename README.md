@@ -2,7 +2,7 @@
 
 <img src="https://github.com/rachelgriffard/micRoclean/blob/main/images/micRoclean.svg" height = "200" align = "right">
 
-micRoclean contains two pipelines for decontaminating low-biomass microbiome data.
+micRoclean contains two pipelines within the *micRoclean()* function for decontaminating low-biomass microbiome data.
 
 **For questions on installation or usage, please submit an [issue](https://github.com/rachelgriffard/micRoclean/issues) or [discussion](https://github.com/rachelgriffard/micRoclean/discussions) via GitHub.**
 
@@ -55,7 +55,7 @@ head(metadata)
 | Sample_5  |  TRUE | DNA extraction control | B| B4|
 | Sample_6  |  FALSE | plasma | B| C12|
 
-### Pipeline 1
+### Original Composition Pipeline
 This pipeline should be used when the user:
 1. Has sample well information available and/or
 2. Wants to primarily characterize the original composition of the sample prior to contamination and/or
@@ -65,26 +65,28 @@ Furthermore, users must have control samples present in each batch for this meth
 
 This pipeline implements the [SCRuB method](https://www.nature.com/articles/s41587-023-01696-w) for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 ```
-pipeline_1_results = pipeline1(counts = counts,
+orig.composition_results = micRoclean(counts = counts,
                                meta = metadata,
+                               research_goal = 'orig.composition',
                                control_name = 'Control')
 ```
 Once run, the pipeline will return a list object with:
 1. *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (p) matrix with the decontaminated counts
 2. *Filtering loss value (FL)* - A numeric value between 0 and 1
 
-### Pipeline 2
+### Biomarker Identification Pipeline
 This pipeline should be used when the user:
 1. Wants to primarily identify potential biomarkers
 2. Does not have sample well information available
 
-Pipeline 2 contains multiple steps to identify potential contaminants, as visualized here:
+The Biomarker Identification Pipeline contains multiple steps to identify potential contaminants, as visualized here:
 <img src = "https://github.com/rachelgriffard/micRoclean/assets/95938614/f7c3290e-026a-4d53-9939-e737ea400da1" align = "center" height = 400>
 
 To run this pipeline, the user can input their data as such:
 ```
-pipeline_2_results = pipeline2(counts = counts,
+biomarkerID_results = micRoclean(counts = counts,
                                meta = metadata,
+                               research_goal = 'biomarker',
                                blocklist = bl,
                                technical_replicates = tr,
                                control_name = 'Control',
@@ -129,9 +131,9 @@ bl = c('Actinomyces','Corynebacterium','Arthrobacter',
        'Acinetobacter','Enhydrobacter','Pseudomonas','Stenotrophomonas','Xanthomonas')
 ```
 
-Optionally, users can input their results list object from pipeline2 into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization is interactive.
+Optionally, users can input their results list object from the Biomarker Identification Pipeline into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization will be interactive within an HTML pop up.
 ```
-visualize_pipeline(pipeline_2_results,
+visualize_pipeline(biomarkerID_results,
                    interactive = FALSE)
 ```
 
