@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 micRoclean contains two pipelines for decontaminating low-biomass microbiome data.
 
-For questions on installation or usage, please submit an issue or discussion via [GitHub](https://github.com/rachelgriffard/micRoclean/issues).  
+For issues with installation or usage, please submit an issue or discussion via [GitHub](https://github.com/rachelgriffard/micRoclean/issues).  
 
 To run this vignette, it is suggested to download the whole "vignettes" file folder and set working directory to file location by choosing:  
 **Session > Set working directory > To source file location**
@@ -53,7 +53,7 @@ data(pipeline2_data, package = 'micRoclean')
 
 The *count matrix* is A samples (n) by features (p) matrix.  
 
-The following is the count matrix for pipeline 1.
+The following is the count matrix for micRoclean() with research_goal = 'orig.composition'.
 
 ```{r import-counts-1}
 # counts_1 = read.csv('counts_pipeline1.csv', row.names = 1)
@@ -63,7 +63,7 @@ counts_1 %>% kable()  %>%
  scroll_box(width = '100%', height = "300px")
 ```
 
-The following is the counts matrix for pipeline 2.
+The following is the counts matrix for micRoclean() with research_goal = 'biomarker'.
 
 ```{r import-counts-2}
 # counts_2 = read.csv('counts_pipeline2.csv', row.names = 1)
@@ -86,7 +86,7 @@ The *metadata* is a matrix with samples (n) as rows and two required columns *is
 
 -   (optional) *sample_well* - String that indicates the well location of the sample. Must be in LETTER-NUMBER format, e.g. A1.
 
-The following is the metadata for pipeline 1.
+The following is the metadata for orig.composition.
 
 ```{r import-meta-1}
 # metadata_1 = read.csv('metadata_pipeline1.csv', row.names = 1)
@@ -99,7 +99,7 @@ metadata_1 %>% kable()  %>%
  scroll_box(width = '100%', height = "300px")
 ```
 
-The following is the metadata for pipeline 2.
+The following is the metadata for biomarker.
 
 ```{r import-meta2}
 # metadata_2 = read.csv('metadata_pipeline2.csv', row.names = 1)
@@ -114,41 +114,42 @@ We can use these data to see how our pipelines work.
 
 # Pipelines
 
-## pipeline1
+## research_goal = 'orig.composition'
 
 This pipeline should be used when the user:
 
-1.  Has sample well information available
+1.  Has sample well location information available
 
 2.  Wants to primarily characterize the original composition of the sample prior to contamination
 
-3.  Has only one batch, or has multiple batches if negative controls are present in each
+3.  Has only one batch, or has multiple batches *if* negative controls are present in each
 
-Furthermore, users must have control samples present in each batch for this method to be used.
+Users must have control samples present in each batch for this method to be used.
 
 This pipeline implements the [SCRuB method](https://www.nature.com/articles/s41587-023-01696-w) for decontamination (Austin et al., 2023). To run this pipeline, the user can input their data as such:
 
-```{r pipeline1}
-pipeline_1_results = pipeline1(counts = counts_1,
+```{r orig.composition}
+orig.composition_results = micRoclean(counts = counts_1,
+                               research_goal = 'orig.composition',
                                meta = metadata_1,
                                control_name = 'Blank')
 ```
 
 Once run, the pipeline will return a list object with:
 
-1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (p) matrix with the decontaminated counts
+1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by features (q) matrix with the decontaminated counts
 
 ```{r p1-decount}
-pipeline_1_results$decontaminated_count %>% kable()  %>%
+orig.composition_results$decontaminated_count %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
 ```
 
 
-2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering
+2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering. For more detailed information, users are encouraged to read the manuscript associated with this package.
 
 ```{r p1-fl}
-pipeline_1_results$filtering_loss
+orig.composition_results$filtering_loss
 ```
 
 
@@ -156,9 +157,9 @@ Other notes:
 
 -   If there are multiple batches, they will be decontaminated through SCRuB separately as suggested by the method and then appended back together into a full decontaminated count matrix
 
-## pipeline2
+## research_goal = 'biomarker'
 
-This pipeline should be used when the user: 1. Wants to primarily identify potential biomarkers 2. Does not have sample well information available
+This pipeline should be used when the user: 1. Wants to primarily identify potential biomarkers
 
 Pipeline 2 contains multiple steps to identify potential contaminants, as visualized here: <img src="https://github.com/rachelgriffard/micRoclean/assets/95938614/f7c3290e-026a-4d53-9939-e737ea400da1" align="center" height="400"/>
 
@@ -223,10 +224,11 @@ tr %>% kable() %>%
 
 Then the user can input their data as such:
 
-```{r pipeline2, eval = FALSE}
+```{r biomarker, eval = FALSE}
 # remove eval = FALSE for individual use
-pipeline_2_results = pipeline2(counts = counts_2,
+biomarker_results = micRoclean(counts = counts_2,
                                meta = metadata_2,
+                               research_goal = 'biomarker',
                                blocklist = bl,
                                control_name = 'DENC',
                                technical_replicates = tr,
@@ -237,9 +239,10 @@ When used, this will return a warning indicating that the data has evidence of w
 
 ```{r echo = FALSE}
 # for knitting purposes only
-# save(pipeline_2_results, file = 'ignore/pipeline_2_results.RData')
+# save(biomarker_results, file = 'ignore/biomarker_results.RData')
 
 data(pipeline2_results, package = 'micRoclean')
+biomarker_results = pipeline_2_results
 ```
 
 
@@ -249,14 +252,14 @@ Where:
 
 -   *technical_replicates* - Data frame indicating pairs of technical replicates across batches by sample name. See example below where Sample 1 and Sample 6 are technical replicates.  
 
-We can see that in this case, the sample appears to have evidence of high well to well contamination. The function prompts the user to decide whether to continue the run. For this vignette, we choose to continue to use pipeline2.  
+We can see that in this case, the sample appears to have evidence of high well to well contamination. The function prompts the user to decide whether to continue the run. For this vignette, we choose to continue to use biomarker.  
 
 Once run, the pipeline will return a list object with:
 
-1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by non-contaminant features (p - c) matrix with the decontaminated counts
+1.  *Decontaminated counts matrix (decontaminated_count)* - A samples (n) by non-contaminant features (q) matrix with the decontaminated counts
 
 ```{r p2-decount}
-pipeline_2_results$decontaminated_count %>% kable()  %>%
+biomarker_results$decontaminated_count %>% kable()  %>%
   kable_styling("striped", full_width = T) %>% 
  scroll_box(width = '100%', height = "300px")
 ```
@@ -264,17 +267,17 @@ pipeline_2_results$decontaminated_count %>% kable()  %>%
 2.  *Filtering loss value (FL)* - A numeric value between 0 and 1 indicating the contribution of the removed counts to the overall covariance. High values would be a sign of potential over-filtering.
 
 ```{r p2-fl}
-pipeline_2_results$filtering_loss
+biomarker_results$filtering_loss
 ```
 
 3.  *Contaminant ID (contaminant_id)* - Dataframe with features (p) by removal steps and boolean value indicating TRUE if tagged as contaminant in that step, FALSE otherwise.
 
 4.  *Removed (removed)* - Character vector of all samples tagged as contaminants and removed from the decontaminated count matrix
 
-Optionally, users can input their results list object from pipeline2 into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization is interactive.
+Optionally, users can input their results list object from biomarker into the *visualize_pipeline* function. If *interactive* is set to true, the resulting visualization is interactive.
 
 ```{r p2-visualize, out.width = "75%"}
-visualize_pipeline(pipeline_2_results,
+visualize_pipeline(biomarker_results,
                    interactive = FALSE)
 ```
 
@@ -288,13 +291,13 @@ $$FL(J) = 1 - \frac{\|Y^T Y\|_F^2}{\|X^TX\|_F^2}$$
 
 where the filtering loss represents a ratio of the unfiltered ($X$) and filtered ($Y$) covariance matrices.
 
-In our example for pipeline1, we see that the filtering loss is:
+In our example for orig.composition, we see that the filtering loss is:
 
 ```{r filtering-loss}
-paste0('Filtering loss: ', round(pipeline_1_results$filtering_loss, 4))
+paste0('Filtering loss: ', round(orig.composition_results$filtering_loss, 4))
 ```
 
-Indicating that there is a low contribution for the removed counts. We do not see evidence of overfiltering using this method.
+Indicating that there is a low contribution for the removed counts, about 22% of the covariance. We do not see evidence of overfiltering using this method.
 
 For more detailed information, users are suggested to read the methods section 2.1 of the [Smirnova, Huzurbazar, and Jafari (2109)](https://doi.org/10.1093/biostatistics/kxy020) publication.
 
