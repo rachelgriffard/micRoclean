@@ -77,7 +77,8 @@ Once run, the pipeline will return a list object with:
 ### Biomarker Identification Pipeline
 This pipeline should be used when the user:
 1. Wants to primarily identify potential biomarkers
-2. Does not have sample well information available
+2. Do not have negative control samples present in all batches
+3. Does not have sample well information available
 
 The Biomarker Identification Pipeline contains multiple steps to identify potential contaminants, as visualized here:
 
