@@ -1,0 +1,14 @@
+"sample","batch","is.neg","technical_replicate"
+"Sample1a","b1",FALSE,"A"
+"Sample2a","b1",FALSE,"B"
+"Sample3","b1",FALSE,NA
+"Sample4","b1",FALSE,NA
+"DENC1","b1",TRUE,NA
+"DENC2","b1",TRUE,NA
+"Sample1b","b2",FALSE,"A"
+"Sample2b","b2",FALSE,"B"
+"Sample7","b2",FALSE,NA
+"Sample5","b2",FALSE,NA
+"Sample6","b2",FALSE,NA
+"DENC3","b2",TRUE,NA
+"DENC4","b2",TRUE,NA
