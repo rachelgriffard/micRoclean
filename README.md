@@ -55,7 +55,7 @@ head(metadata)
 | Sample_5  |  TRUE | DNA extraction control | B| B4|
 | Sample_6  |  FALSE | plasma | B| C12|
 
-### Original Composition Pipeline
+### Original Composition Estimation Pipeline
 This pipeline should be used when the user:
 1. Has sample well information available and/or
 2. Wants to primarily characterize the original composition of the sample prior to contamination and/or
