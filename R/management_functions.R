@@ -16,7 +16,7 @@
 #' filtering loss (FL) statistics
 #' @export
 
-micRoclean = function(counts, meta, research_goal, control_name, control_order = NA, blocklist, remove_if = 0.5, step2_threshold = 1, technical_replicates, seed = 42) {
+micRoclean = function(counts, meta, research_goal, control_name, control_order = NA, blocklist, remove_if = 1, step2_threshold = 0.5, technical_replicates, seed = 42) {
   if (research_goal == 'orig.composition') {
      res = pipeline1(counts, meta, control_name, control_order, seed)
      return(res)
@@ -95,6 +95,6 @@ FL = function(counts, new_counts = NULL){
   Netw = t(as.matrix(counts))%*%as.matrix(counts)
   Netw_R = t(as.matrix(X_R))%*%as.matrix(X_R)
 
-  FL =  1 - (sum(Netw_R*Netw_R)/sum(Netw*Netw))
+  FL =  1-(norm(Netw_R), "F")^2/norm(Netw), "F")^2)
   return(FL)
 }
