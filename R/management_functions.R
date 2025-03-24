@@ -95,6 +95,6 @@ FL = function(counts, new_counts = NULL){
   Netw = t(as.matrix(counts))%*%as.matrix(counts)
   Netw_R = t(as.matrix(X_R))%*%as.matrix(X_R)
 
-  FL =  1 - (sum(Netw_R*Netw_R)/sum(Netw*Netw))
+  FL =  1-(norm(Netw_R), "F")^2/norm(Netw), "F")^2)
   return(FL)
 }
