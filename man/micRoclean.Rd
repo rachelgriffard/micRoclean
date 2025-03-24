@@ -12,8 +12,8 @@ micRoclean(
   control_name,
   control_order = NA,
   blocklist,
-  remove_if = 0.5,
-  step2_threshold = 1,
+  remove_if = 1,
+  step2_threshold = 0.5,
   technical_replicates,
   seed = 42
 )
