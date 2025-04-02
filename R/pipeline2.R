@@ -106,7 +106,7 @@ step1 = function(counts, meta) {
 
   # run differential analysis
   suppressWarnings({
-    s1 = ANCOMBC::ancombc(phyloseq = phyloseq, assay_name = "counts",  # use package ANCOMBC
+    s1 = ANCOMBC::ancombc(data = phyloseq, assay_name = "counts",  # use package ANCOMBC
                  group = "batch", p_adj_method = "BH", lib_cut = 0,
                  formula = "batch",
                  struc_zero = TRUE, neg_lb = FALSE,
